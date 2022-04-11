@@ -14,6 +14,9 @@ class Window:
         self.clock = pg.time.Clock()
         self.running = True
         self.font_name = pg.font.match_font(FONT_NAME)
+        self.play=False #if it has been played or not
+        self.saved=False #if there exists savied data or not
+        self.rank=[]
 
     def quit_game(self):
         self.running=False
@@ -42,7 +45,7 @@ class Window:
         self.screen.blit(text_surface, text_rect)
 
 
-    def show_menu_screen(self):
+    def show_menu_screen(self, player=None, apple=None):
         print("menu screen")
         self.screen.fill(BGCOLOR)
         menu=[]
@@ -71,19 +74,26 @@ class Window:
                 print(mouse[0], mouse[1])
                 for i in menu:
                     if i[2] + i[0] > mouse[0] > i[0] and i[1] + i[3] > mouse[1] > i[1] and i[4]!=None:
-                        i[4]()
+                        if i[4]==self.load or i[4]==self.ranking:
+                            i[4](player, apple)
+                        else:
+                            i[4]()
                         break
 
-    def load(self):
+    def load(self, player=None, apple=None):
         #loading game value
-        print("load")
         self.screen.fill(BGCOLOR)
         self.draw_text("loading...", 48, WHITE, WIDTH/2, HEIGHT/4)
         pg.display.flip()
         time.sleep(1)
-        self.show_game_screen()
+        if self.saved==True:
+            print("load game", player.user_name, player.point, player.positions)
+            self.show_game_screen(player, apple)
+        else:
+            print("you didn't saved data")
+            self.show_game_screen()
     
-    def ranking(self):
+    def ranking(self, player=None, apple=None):
         #loading ranking
         print("rank")
         self.screen.fill(BGCOLOR)
@@ -93,6 +103,7 @@ class Window:
         self.draw_text("menu",22,WHITE,WIDTH-50,HEIGHT/10 + 40)
         menu.append([WIDTH-130, HEIGHT/10 +40, 130,40, self.show_menu_screen])
         pg.display.flip()
+        print(self.rank)
         while self.running:
             key = self.wait_for_key()
             if key==1.5:
@@ -102,10 +113,10 @@ class Window:
                 mouse=pg.mouse.get_pos()
                 for i in menu:
                     if i[2] + i[0] > mouse[0] > i[0] and i[1] + i[3] > mouse[1] > i[1] and i[4]!=None:
-                        i[4]()
+                        self.show_menu_screen(player, apple)
                         break
 
-    def show_game_screen(self):
+    def show_game_screen(self, player=None, apple=None):
         '''
         print("game")
         self.screen.fill(BGCOLOR)
@@ -122,10 +133,14 @@ class Window:
                 self.show_game_menu_screen()
                 break
         '''
-        pt = 0
         last_moved_time = datetime.now()
-        player = Snake()
-        apple = Apple()
+        if player==None:
+            #need to input user name
+            player = Snake() #new player
+            apple = Apple()
+            self.played=True
+        
+        print("start game",player.user_name, player.point, player.positions)
         
         while self.running:
             self.clock.tick(FPS)
@@ -138,7 +153,9 @@ class Window:
                     if event.key in KEY_DIRECTION:
                         player.direction = KEY_DIRECTION[event.key]
                     elif event.key==pg.K_ESCAPE:
-                        self.show_game_menu_screen()
+                        print("escape", player.user_name, player.point, player.positions)
+                        self.show_game_menu_screen(player, apple)
+                        
                         
      
             if timedelta(seconds=0.1) <= datetime.now() - last_moved_time:
@@ -148,18 +165,19 @@ class Window:
             if player.positions[0] == apple.position:
                 player.grow()    
                 apple.position = (random.randint(0, (HEIGHT/20)-20), random.randint(0, (WIDTH/20)-20))
-                pt = pt + 1 # a point up when snake ate an apple
+                player.point = player.point + 1 # a point up when snake ate an apple
             
             if player.positions[0] in player.positions[1:]:
-                self.show_game_menu_screen()
+                print("player position..", player.user_name, player.point, player.positions)
+                self.show_game_menu_screen(player,apple)
                 break
                 
             player.draw(self.screen)
             apple.draw(self.screen)
-            self.draw_text(str(pt), 22, BLACK, 40, 0)
+            self.draw_text(str(player.point), 22, BLACK, 40, 0)
             pg.display.update()
     
-    def show_game_menu_screen(self):
+    def show_game_menu_screen(self,player,apple):
         print("game menu")
         self.screen.fill(BGCOLOR)
         menu=[]
@@ -187,25 +205,33 @@ class Window:
                 mouse=pg.mouse.get_pos()
                 for i in menu:
                     if i[2] + i[0] > mouse[0] > i[0] and i[1] + i[3] > mouse[1] > i[1] and i[4]!=None:
+                        if i[4]==self.exit or i[4]==self.save:
+                            print(i[4])
+                            i[4](player,apple)
                         i[4]()
                         break
 
-    def save(self):
+    def save(self,player=None,apple=None):
         #save game value
-        print("save")
+        print("save game", player.user_name, player.point, player.positions)
         self.screen.fill(BGCOLOR)
         self.draw_text("save game value...", 48, WHITE, WIDTH/2, HEIGHT/4)
         pg.display.flip()
         time.sleep(1)
-        self.show_menu_screen()
+        self.saved=True
+        self.show_menu_screen(player,apple)
 
-    def exit(self):
+    def exit(self,player=None,apple=None):
         #reset game value
         print("exit")
         self.screen.fill(BGCOLOR)
         self.draw_text("exit...", 48, WHITE, WIDTH/2, HEIGHT/4)
         pg.display.flip()
         time.sleep(1)
+        self.saved=False
+        self.rank.append((player.user_name, player.point))
+        player.initialize()
+        apple.initialize()
         self.show_menu_screen()
 
  
@@ -223,12 +249,13 @@ def draw_dot(screen, img, pos):
     
     screen.blit(block_img, (block_x, block_y))
     
-    
 class Snake:
     def __init__(self):
         self.positions = [(HEIGHT/20/2,WIDTH/20/2),((HEIGHT/20/2)+1,WIDTH/20/2),((HEIGHT/20/2)+2,WIDTH/20/2)]  # 뱀의 위치
         self.direction = ''
- 
+        self.user_name = 'name'
+        self.point = 0
+
     def draw(self, screen):
         draw_dot(screen, "../static/image/snake_head.png", self.positions[0])
         for position in self.positions[1:]: 
@@ -258,12 +285,22 @@ class Snake:
         elif self.direction == 'C':
             self.positions.append((y, x+1))  
 
+    def initialize(self):
+        self.user_name='name'
+        self.point=0
+        self.position=[(HEIGHT/20/2,WIDTH/20/2),((HEIGHT/20/2)+1,WIDTH/20/2),((HEIGHT/20/2)+2,WIDTH/20/2)]
+        self.direction=''
+        pass
+
 class Apple:
     def __init__(self, position=(10,10)):
         self.position = position
  
     def draw(self, screen):
         draw_dot(screen, "../static/image/apple.png", self.position)
+
+    def initialize(self):
+        self.position=(10,10)
 
 window = Window()
 window.show_menu_screen()
