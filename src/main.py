@@ -1,8 +1,11 @@
 import pygame as pg
 import time
 from settings import *
+from datetime import datetime
+from datetime import timedelta
+import random
 
-cauLogo = pg.image.load("../static/image/cau.bmp")
+#cauLogo = pg.image.load("../static/image/cau.bmp")
 class Window:
     def __init__(self):
         pg.init()
@@ -103,6 +106,7 @@ class Window:
                         break
 
     def show_game_screen(self):
+        '''
         print("game")
         self.screen.fill(BGCOLOR)
         self.draw_text("game screen", 48, WHITE, WIDTH/2, HEIGHT/4)
@@ -117,6 +121,43 @@ class Window:
                 #pause
                 self.show_game_menu_screen()
                 break
+        '''
+        pt = 0
+        last_moved_time = datetime.now()
+        player = Snake()
+        apple = Apple()
+        
+        while self.running:
+            self.clock.tick(FPS)
+            background_img = pg.image.load("../static/image/background.png")
+            background_img = pg.transform.scale(background_img, (WIDTH, HEIGHT))
+            self.screen.blit(background_img, (0,0))
+     
+            for event in pg.event.get():
+                if event.type == pg.KEYDOWN:
+                    if event.key in KEY_DIRECTION:
+                        player.direction = KEY_DIRECTION[event.key]
+                    elif event.key==pg.K_ESCAPE:
+                        self.show_game_menu_screen()
+                        
+     
+            if timedelta(seconds=0.1) <= datetime.now() - last_moved_time:
+                player.move()
+                last_moved_time = datetime.now()
+            
+            if player.positions[0] == apple.position:
+                player.grow()    
+                apple.position = (random.randint(0, (HEIGHT/20)-20), random.randint(0, (WIDTH/20)-20))
+                pt = pt + 1 # a point up when snake ate an apple
+            
+            if player.positions[0] in player.positions[1:]:
+                self.show_game_menu_screen()
+                break
+                
+            player.draw(self.screen)
+            apple.draw(self.screen)
+            self.draw_text(str(pt), 22, BLACK, 40, 0)
+            pg.display.update()
     
     def show_game_menu_screen(self):
         print("game menu")
@@ -167,7 +208,62 @@ class Window:
         time.sleep(1)
         self.show_menu_screen()
 
+ 
+KEY_DIRECTION = {
+    pg.K_UP: 'N',
+    pg.K_DOWN: 'S',
+    pg.K_LEFT: 'W',
+    pg.K_RIGHT: 'E',
+}
+
+def draw_dot(screen, img, pos):
+    block_img = pg.image.load(img)
+    block_img.get_rect().size = (20,20)
+    block_x, block_y = pos[1]*20, pos[0]*20
+    
+    screen.blit(block_img, (block_x, block_y))
+    
+    
+class Snake:
+    def __init__(self):
+        self.positions = [(HEIGHT/20/2,WIDTH/20/2),((HEIGHT/20/2)+1,WIDTH/20/2),((HEIGHT/20/2)+2,WIDTH/20/2)]  # 뱀의 위치
+        self.direction = ''
+ 
+    def draw(self, screen):
+        draw_dot(screen, "../static/image/snake_head.png", self.positions[0])
+        for position in self.positions[1:]: 
+            draw_dot(screen, "../static/image/snake_body.png", position)
+ 
+    def move(self):
+        head_position = self.positions[0]
+        y, x = head_position
+        if self.direction == 'N':
+            self.positions = [(y-1, x)] + self.positions[:-1]
+        elif self.direction == 'S':
+            self.positions = [(y+1, x)] + self.positions[:-1]
+        elif self.direction == 'W':
+            self.positions = [(y, x-1)] + self.positions[:-1]
+        elif self.direction == 'E':
+            self.positions = [(y, x+1)] + self.positions[:-1]
+ 
+    def grow(self):
+        tail_position = self.positions[-1]
+        y, x = tail_position
+        if self.direction == 'N':
+            self.positions.append((y-1, x))
+        elif self.direction == 'S':
+            self.positions.append((y+1, x))
+        elif self.direction == 'W':
+            self.positions.append((y, x-1))
+        elif self.direction == 'C':
+            self.positions.append((y, x+1))  
+
+class Apple:
+    def __init__(self, position=(10,10)):
+        self.position = position
+ 
+    def draw(self, screen):
+        draw_dot(screen, "../static/image/apple.png", self.position)
 
 window = Window()
 window.show_menu_screen()
-
