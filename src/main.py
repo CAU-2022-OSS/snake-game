@@ -47,24 +47,26 @@ class Window:
 
     def show_menu_screen(self, player=None, apple=None):
         print("menu screen")
+        background_img=pg.image.load("../static/image/menu.png")
         self.screen.fill(BGCOLOR)
         menu=[]
         #draw.rect and draw_text will be replaced by image load
-        pg.draw.rect(self.screen, WHITE, [WIDTH/2.5,HEIGHT/4,160,40],2)
-        self.draw_text("play",22,WHITE,WIDTH/2,HEIGHT/4)
-        menu.append([WIDTH/2.5, HEIGHT/4, 160,40, self.show_game_screen])
+        self.screen.blit(background_img,(WIDTH/3,HEIGHT/4))
+        #pg.draw.rect(self.screen, BLACK, [WIDTH/2.5,HEIGHT/4+100,300,40],2)
+        #PLAY
+        menu.append([WIDTH/2.5, HEIGHT/4+100, 300,40, self.show_game_screen])
 
-        pg.draw.rect(self.screen, WHITE, [WIDTH/2.5,HEIGHT/4 + 50,160,40],2)
-        self.draw_text("load",22,WHITE,WIDTH/2,HEIGHT/4 + 50)
-        menu.append([WIDTH/2.5, HEIGHT/4 + 50, 160,40, self.load])
+        #pg.draw.rect(self.screen, BLACK, [WIDTH/2.5,HEIGHT/4 + 176,300,40],2)
+        #LOAD
+        menu.append([WIDTH/2.5, HEIGHT/4 + 176, 300,40, self.load])
 
-        pg.draw.rect(self.screen, WHITE, [WIDTH/2.5,HEIGHT/4 + 100,160,40],2)
-        self.draw_text("ranking",22,WHITE,WIDTH/2,HEIGHT/4 + 100)
-        menu.append([WIDTH/2.5, HEIGHT/4 +100, 160,40, self.ranking])
+        #pg.draw.rect(self.screen, BLACK, [WIDTH/2.5,HEIGHT/4 + 250,300,40],2)
+        #RANKING
+        menu.append([WIDTH/2.5, HEIGHT/4 +250, 300,40, self.ranking])
 
-        pg.draw.rect(self.screen, WHITE, [WIDTH/2.5,HEIGHT/4 + 150,160,40],2)
-        self.draw_text("exit",22,WHITE,WIDTH/2,HEIGHT/4 +150)
-        menu.append([WIDTH/2.5, HEIGHT/4 +150, 160,40, self.quit_game])
+        #pg.draw.rect(self.screen, BLACK, [WIDTH/2.5,HEIGHT/4 + 326,300,40],2)
+        #EXIT
+        menu.append([WIDTH/2.5, HEIGHT/4 +326, 300,40, self.quit_game])
 
         pg.display.flip()
         while self.running:
@@ -82,8 +84,8 @@ class Window:
 
     def load(self, player=None, apple=None):
         #loading game value
-        self.screen.fill(BGCOLOR)
-        self.draw_text("loading...", 48, WHITE, WIDTH/2, HEIGHT/4)
+        #self.screen.fill(BGCOLOR)
+        #self.draw_text("loading...", 48, WHITE, WIDTH/2, HEIGHT/4)
         pg.display.flip()
         time.sleep(1)
         if self.saved==True:
@@ -96,14 +98,20 @@ class Window:
     def ranking(self, player=None, apple=None):
         #loading ranking
         print("rank")
+        background_img=pg.image.load("../static/image/ranking_board.png")
         self.screen.fill(BGCOLOR)
+        self.screen.blit(background_img,(WIDTH/4,HEIGHT/5))
         menu=[]
-        self.draw_text("ranking...", 48, WHITE, WIDTH/2, HEIGHT/4)
-        pg.draw.rect(self.screen, WHITE, [WIDTH-130,HEIGHT/10 + 40,130,40],2)
-        self.draw_text("menu",22,WHITE,WIDTH-50,HEIGHT/10 + 40)
+        #pg.draw.rect(self.screen, WHITE, [WIDTH-130,HEIGHT/10 + 40,130,40],2)
+        self.draw_text("<-",32,WHITE,WIDTH-50,HEIGHT/10 + 40)
         menu.append([WIDTH-130, HEIGHT/10 +40, 130,40, self.show_menu_screen])
+        for i in range(len(self.rank)):
+            self.draw_text(str(self.rank[i][0]),22,BLACK,WIDTH/4 + 100,HEIGHT/3+(30*(i+1)))
+            self.draw_text(str(self.rank[i][1]),22,BLACK,WIDTH*3/4,HEIGHT/3+(30*(i+1)))
+            print(self.rank)
+        if len(self.rank)==0:
+            self.draw_text("There are no records saved yet", 22, BLACK, WIDTH/2, HEIGHT/3+30)
         pg.display.flip()
-        print(self.rank)
         while self.running:
             key = self.wait_for_key()
             if key==1.5:
@@ -140,7 +148,7 @@ class Window:
             apple = Apple()
             self.played=True
         
-        print("start game",player.user_name, player.point, player.positions)
+        #print("start game",player.user_name, player.point, player.positions)
         
         while self.running:
             self.clock.tick(FPS)
@@ -179,24 +187,27 @@ class Window:
     
     def show_game_menu_screen(self,player,apple):
         print("game menu")
+        background_img=pg.image.load("../static/image/game_menu.png")
         self.screen.fill(BGCOLOR)
+        self.screen.blit(background_img,(WIDTH/3,HEIGHT/4))
+        
         menu=[]
         #draw.rect and draw_text will be replaced by image load
-        pg.draw.rect(self.screen, WHITE, [WIDTH/2.5,HEIGHT/4,160,40],2)
-        self.draw_text("resume",22,WHITE,WIDTH/2,HEIGHT/4)
-        menu.append([WIDTH/2.5, HEIGHT/4, 160,40, self.show_game_screen])
+        #pg.draw.rect(self.screen, BLACK, [WIDTH/2.5,HEIGHT/4+100,300,40],2)
+        #RESUME
+        menu.append([WIDTH/2.5, HEIGHT/4+100, 300,40, self.show_game_screen])
 
-        pg.draw.rect(self.screen, WHITE, [WIDTH/2.5,HEIGHT/4 + 50,160,40],2)
-        self.draw_text("restart",22,WHITE,WIDTH/2,HEIGHT/4 + 50)
-        menu.append([WIDTH/2.5, HEIGHT/4 + 50, 160,40, self.show_game_screen])
+        #pg.draw.rect(self.screen, BLACK, [WIDTH/2.5,HEIGHT/4 + 176,300,40],2)
+        #RESTART
+        menu.append([WIDTH/2.5, HEIGHT/4 + 176, 300,40, self.show_game_screen])
 
-        pg.draw.rect(self.screen, WHITE, [WIDTH/2.5,HEIGHT/4 + 100,160,40],2)
-        self.draw_text("save",22,WHITE,WIDTH/2,HEIGHT/4 + 100)
-        menu.append([WIDTH/2.5, HEIGHT/4 +100, 160,40, self.save])
+        #pg.draw.rect(self.screen, BLACK, [WIDTH/2.5,HEIGHT/4 + 250,300,40],2)
+        #SAVE
+        menu.append([WIDTH/2.5, HEIGHT/4 +250, 300,40, self.save])
 
-        pg.draw.rect(self.screen, WHITE, [WIDTH/2.5,HEIGHT/4 + 150,160,40],2)
-        self.draw_text("exit",22,WHITE,WIDTH/2,HEIGHT/4 +150)
-        menu.append([WIDTH/2.5, HEIGHT/4 +150, 160,40, self.exit])
+        #pg.draw.rect(self.screen, BLACK, [WIDTH/2.5,HEIGHT/4 + 326,300,40],2)
+        #EIXT
+        menu.append([WIDTH/2.5, HEIGHT/4 +326, 300,40, self.exit])
 
         pg.display.flip()
         while self.running:
@@ -213,9 +224,9 @@ class Window:
 
     def save(self,player=None,apple=None):
         #save game value
-        print("save game", player.user_name, player.point, player.positions)
-        self.screen.fill(BGCOLOR)
-        self.draw_text("save game value...", 48, WHITE, WIDTH/2, HEIGHT/4)
+        #print("save game", player.user_name, player.point, player.positions)
+        #self.screen.fill(WHITE)
+        #self.draw_text("save game value...", 48, BLACK, WIDTH/2, HEIGHT/4)
         pg.display.flip()
         time.sleep(1)
         self.saved=True
@@ -223,9 +234,9 @@ class Window:
 
     def exit(self,player=None,apple=None):
         #reset game value
-        print("exit")
-        self.screen.fill(BGCOLOR)
-        self.draw_text("exit...", 48, WHITE, WIDTH/2, HEIGHT/4)
+        #print("exit")
+        #self.screen.fill(WHITE)
+        #self.draw_text("exit...", 48, BLACK, WIDTH/2, HEIGHT/4)
         pg.display.flip()
         time.sleep(1)
         self.saved=False
