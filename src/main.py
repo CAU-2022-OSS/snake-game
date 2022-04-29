@@ -99,12 +99,14 @@ class Window:
         #loading ranking
         print("rank")
         background_img=pg.image.load("../static/image/ranking_board.png")
+        back_button=pg.image.load("../static/image/back_button.png")
         self.screen.fill(BGCOLOR)
         self.screen.blit(background_img,(WIDTH/4,HEIGHT/5))
+        self.screen.blit(back_button,(WIDTH-200,HEIGHT/10+40))
         menu=[]
-        #pg.draw.rect(self.screen, WHITE, [WIDTH-130,HEIGHT/10 + 40,130,40],2)
-        self.draw_text("<-",32,WHITE,WIDTH-50,HEIGHT/10 + 40)
-        menu.append([WIDTH-130, HEIGHT/10 +40, 130,40, self.show_menu_screen])
+        #pg.draw.rect(self.screen, BLACK, [WIDTH-210,HEIGHT/10 + 30,100,100],2)
+        #self.draw_text("<-",32,RED,WIDTH-50,HEIGHT/10 + 40)
+        menu.append([WIDTH-210, HEIGHT/10 +30, 100,100, self.show_menu_screen])
         for i in range(len(self.rank)):
             self.draw_text(str(self.rank[i][0]),22,BLACK,WIDTH/4 + 100,HEIGHT/3+(30*(i+1)))
             self.draw_text(str(self.rank[i][1]),22,BLACK,WIDTH*3/4,HEIGHT/3+(30*(i+1)))
@@ -125,22 +127,6 @@ class Window:
                         break
 
     def show_game_screen(self, player=None, apple=None):
-        '''
-        print("game")
-        self.screen.fill(BGCOLOR)
-        self.draw_text("game screen", 48, WHITE, WIDTH/2, HEIGHT/4)
-        #load some data...
-        pg.display.flip()
-        while self.running:
-            key = self.wait_for_key()
-            if key==1:
-                self.show_game_screen()
-                break
-            elif key==1.5:
-                #pause
-                self.show_game_menu_screen()
-                break
-        '''
         last_moved_time = datetime.now()
         if player==None:
             #need to input user name
@@ -241,6 +227,9 @@ class Window:
         time.sleep(1)
         self.saved=False
         self.rank.append((player.user_name, player.point))
+        self.rank.sort(key=lambda x:x[1], reverse=True)
+        if len(self.rank)>10:
+            self.rank=self.rank[:10]
         player.initialize()
         apple.initialize()
         self.show_menu_screen()
