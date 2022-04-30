@@ -5,7 +5,8 @@ from datetime import datetime
 from datetime import timedelta
 import random
 
-#cauLogo = pg.image.load("../static/image/cau.bmp")
+staticPath = "../static/"
+
 class Window:
     def __init__(self):
         pg.init()
@@ -34,10 +35,10 @@ class Window:
 
 
     def show_menu_screen(self, player=None, apple=None):
-        background=pg.image.load("../static/image/background.png")
+        background=pg.image.load(staticPath+"image/background.png")
         background_img=pg.transform.scale(background, (WIDTH, HEIGHT))
         self.screen.blit(background_img, (0,0))
-        menu_img=pg.image.load("../static/image/menu.png")
+        menu_img=pg.image.load(staticPath+"image/menu.png")
         self.screen.blit(menu_img,(WIDTH/3,HEIGHT/4))
         menu=[] #save each menu button image location
         #PLAY
@@ -64,7 +65,7 @@ class Window:
 
     def load(self, player=None, apple=None):
         #loading game value
-        background=pg.image.load("../static/image/background.png")
+        background=pg.image.load(staticPath+"image/background.png")
         background_img=pg.transform.scale(background, (WIDTH, HEIGHT))
         self.screen.blit(background_img, (0,0))
         if self.saved==True:
@@ -73,7 +74,7 @@ class Window:
             time.sleep(1)
             self.show_game_screen(player, apple)
         else: #if there's no saved game data
-            back_button=pg.image.load("../static/image/back_button.png")
+            back_button=pg.image.load(staticPath+"image/back_button.png")
             self.screen.blit(back_button,(WIDTH-200,HEIGHT/10+40))
             menu=[WIDTH-210, HEIGHT/10 +30, 100,100, self.show_menu_screen] #save back button image location
             self.draw_text("There's no saved game data that can be loading", 25, BLACK, WIDTH/2, HEIGHT/3+70)
@@ -89,12 +90,12 @@ class Window:
 
     def ranking(self, player=None, apple=None):
         #loading ranking
-        background=pg.image.load("../static/image/background.png")
+        background=pg.image.load(staticPath+"image/background.png")
         background_img=pg.transform.scale(background, (WIDTH, HEIGHT))
         self.screen.blit(background_img, (0,0))
 
-        rank_background_img=pg.image.load("../static/image/ranking_board.png")
-        back_button=pg.image.load("../static/image/back_button.png")
+        rank_background_img=pg.image.load(staticPath+"image/ranking_board.png")
+        back_button=pg.image.load(staticPath+"image/back_button.png")
         self.screen.blit(rank_background_img,(WIDTH/4-30,HEIGHT/5))
         self.screen.blit(back_button,(WIDTH-200,HEIGHT/10+40))
 
@@ -129,15 +130,15 @@ class Window:
         
         while self.running:
             self.clock.tick(FPS)
-            background_img = pg.image.load("../static/image/background.png")
+            background_img = pg.image.load(staticPath+"image/background.png")
             background_img = pg.transform.scale(background_img, (WIDTH, HEIGHT))
             self.screen.blit(background_img, (0,0))
             
-            gameboard_img = pg.image.load("../static/image/game_board.png")
+            gameboard_img = pg.image.load(staticPath+"image/game_board.png")
             gameboard_img = pg.transform.scale(gameboard_img, (800, 800))
             self.screen.blit(gameboard_img, (45,85))
             
-            logo_img = pg.image.load("../static/image/logo.png")
+            logo_img = pg.image.load(staticPath+"image/logo.png")
             logo_img = pg.transform.scale(logo_img, (303, 235))
             self.screen.blit(logo_img, (880,200))
      
@@ -216,18 +217,15 @@ class Window:
             clock.tick(30)
     
     def game_over_screen(self, player, apple):
-        gameoverback_img = pg.image.load("../static/image/game_over_back.png")
+        gameoverback_img = pg.image.load(staticPath+"image/game_over_back.png")
         gameoverback_img = pg.transform.scale(gameoverback_img, (WIDTH, HEIGHT))
         self.screen.blit(gameoverback_img, (0,0))
 
-        gameover_img = pg.image.load("../static/image/game_over.png")
+        gameover_img = pg.image.load(staticPath+"image/game_over.png")
         gameover_img = pg.transform.scale(gameover_img, (500, 500))
         self.screen.blit(gameover_img, (390,230))
         
         self.draw_text(str(player.point), 200, BLACK, 640, 330, '../static/font/poxel.ttf')
-        
-        #input_box = pg.Rect(600, 605, 80, 48)
-        #pg.draw.rect(self.screen, RED, input_box, 2)
         
         pg.display.flip()
         while self.running:
@@ -245,11 +243,11 @@ class Window:
         
     
     def show_game_menu_screen(self,player,apple):
-        gameoverback_img = pg.image.load("../static/image/game_over_back.png")
+        gameoverback_img = pg.image.load(staticPath+"image/game_over_back.png")
         gameoverback_img = pg.transform.scale(gameoverback_img, (WIDTH, HEIGHT))
         self.screen.blit(gameoverback_img, (0,0))
         
-        background_img=pg.image.load("../static/image/game_menu.png")
+        background_img=pg.image.load(staticPath+"image/game_menu.png")
         #self.screen.fill(BGCOLOR)
         self.screen.blit(background_img,(WIDTH/3,HEIGHT/4))
         
@@ -314,9 +312,9 @@ class Snake:
         self.point = 0
 
     def draw(self, screen):
-        draw_dot(screen, "../static/image/snake_head.png", self.positions[0])
+        draw_dot(screen, staticPath+"image/snake_head.png", self.positions[0])
         for position in self.positions[1:]: 
-            draw_dot(screen, "../static/image/snake_body.png", position)
+            draw_dot(screen, staticPath+"image/snake_body.png", position)
  
     def move(self):
         head_position = self.positions[0]
@@ -354,7 +352,7 @@ class Apple:
         self.position = position
  
     def draw(self, screen):
-        draw_dot(screen, "../static/image/apple.png", self.position)
+        draw_dot(screen, staticPath+"image/apple.png", self.position)
 
     def initialize(self):
         self.position=(random.randint(3, 40), random.randint(5, 42))
