@@ -87,10 +87,11 @@ class Window:
         self.screen.fill(BGCOLOR)
         #self.draw_text("loading...", 48, WHITE, WIDTH/2, HEIGHT/4)
         if self.saved==True:
-            self.draw_text("loading game...", 30, WHITE, WIDTH/2, HEIGHT/4)
-            self.draw_text("latest saved data", 30, WHITE, WIDTH/2, HEIGHT/4+50)
-            tmp="user name : "+player.user_name+" score : "+str(player.point)
-            self.draw_text(tmp, 30, WHITE, WIDTH/2, HEIGHT/4+100)
+            self.draw_text("loading game...", 25, BLACK, WIDTH/2, HEIGHT/3+70)
+            #pg.draw.rect(self.screen, WHITE, [WIDTH/2-180,HEIGHT/3 + 40,350,100])
+            #self.draw_text("latest saved data", 25, BLACK, WIDTH/2, HEIGHT/3+50)
+            #tmp="user name : "+player.user_name+" score : "+str(player.point)
+            #self.draw_text(tmp, 25, BLACK, WIDTH/2, HEIGHT/3+100)
             #print("load game", player.user_name, player.point, player.positions)
             pg.display.flip()
             time.sleep(1)
@@ -102,7 +103,7 @@ class Window:
             #pg.draw.rect(self.screen, BLACK, [WIDTH-210,HEIGHT/10 + 30,100,100],2)
             #self.draw_text("<-",32,RED,WIDTH-50,HEIGHT/10 + 40)
             menu.append([WIDTH-210, HEIGHT/10 +30, 100,100, self.show_menu_screen])
-            self.draw_text("There's no saved game data that can be loading", 30, WHITE, WIDTH/2, HEIGHT/4)
+            self.draw_text("There's no saved game data that can be loading", 25, BLACK, WIDTH/2, HEIGHT/3+70)
             #print("you didn't saved data")
             pg.display.flip()
             while self.running:
@@ -124,18 +125,19 @@ class Window:
         background_img=pg.image.load("../static/image/ranking_board.png")
         back_button=pg.image.load("../static/image/back_button.png")
         self.screen.fill(BGCOLOR)
-        self.screen.blit(background_img,(WIDTH/4,HEIGHT/5))
+        self.screen.blit(background_img,(WIDTH/4-30,HEIGHT/5))
         self.screen.blit(back_button,(WIDTH-200,HEIGHT/10+40))
         menu=[]
         #pg.draw.rect(self.screen, BLACK, [WIDTH-210,HEIGHT/10 + 30,100,100],2)
         #self.draw_text("<-",32,RED,WIDTH-50,HEIGHT/10 + 40)
         menu.append([WIDTH-210, HEIGHT/10 +30, 100,100, self.show_menu_screen])
         for i in range(len(self.rank)):
+            self.draw_text(str(i+1),22,BLACK,WIDTH/4+60, HEIGHT/3+(30*(i+1)))
             self.draw_text(str(self.rank[i][0]),22,BLACK,WIDTH/4 + 100,HEIGHT/3+(30*(i+1)))
-            self.draw_text(str(self.rank[i][1]),22,BLACK,WIDTH*3/4,HEIGHT/3+(30*(i+1)))
+            self.draw_text(str(self.rank[i][1]),22,BLACK,WIDTH*3/4-50,HEIGHT/3+(30*(i+1)))
             print(self.rank)
         if len(self.rank)==0:
-            self.draw_text("There are no records saved yet", 22, BLACK, WIDTH/2, HEIGHT/3+30)
+            self.draw_text("There are no records saved yet", 22, BLACK, WIDTH/2+10, HEIGHT/3+70)
         pg.display.flip()
         while self.running:
             key = self.wait_for_key()
