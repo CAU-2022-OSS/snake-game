@@ -84,17 +84,40 @@ class Window:
 
     def load(self, player=None, apple=None):
         #loading game value
-        #self.screen.fill(BGCOLOR)
+        self.screen.fill(BGCOLOR)
         #self.draw_text("loading...", 48, WHITE, WIDTH/2, HEIGHT/4)
-        pg.display.flip()
-        time.sleep(1)
         if self.saved==True:
-            print("load game", player.user_name, player.point, player.positions)
+            self.draw_text("loading game...", 30, WHITE, WIDTH/2, HEIGHT/4)
+            self.draw_text("latest saved data", 30, WHITE, WIDTH/2, HEIGHT/4+50)
+            tmp="user name : "+player.user_name+" score : "+str(player.point)
+            self.draw_text(tmp, 30, WHITE, WIDTH/2, HEIGHT/4+100)
+            #print("load game", player.user_name, player.point, player.positions)
+            pg.display.flip()
+            time.sleep(1)
             self.show_game_screen(player, apple)
         else:
-            print("you didn't saved data")
-            self.show_game_screen()
-    
+            back_button=pg.image.load("../static/image/back_button.png")
+            self.screen.blit(back_button,(WIDTH-200,HEIGHT/10+40))
+            menu=[]
+            #pg.draw.rect(self.screen, BLACK, [WIDTH-210,HEIGHT/10 + 30,100,100],2)
+            #self.draw_text("<-",32,RED,WIDTH-50,HEIGHT/10 + 40)
+            menu.append([WIDTH-210, HEIGHT/10 +30, 100,100, self.show_menu_screen])
+            self.draw_text("There's no saved game data that can be loading", 30, WHITE, WIDTH/2, HEIGHT/4)
+            #print("you didn't saved data")
+            pg.display.flip()
+            while self.running:
+                key = self.wait_for_key()
+                if key==1.5:
+                    self.quit_game()
+                    break
+                elif key==2:
+                    mouse=pg.mouse.get_pos()
+                    for i in menu:
+                        if i[2] + i[0] > mouse[0] > i[0] and i[1] + i[3] > mouse[1] > i[1] and i[4]!=None:
+                            self.show_menu_screen()
+                            break
+            
+
     def ranking(self, player=None, apple=None):
         #loading ranking
         print("rank")
@@ -306,7 +329,8 @@ class Window:
                         elif i[4]=='resume':
                             print('resume')
                             self.saved=True
-                            self.load(player, apple)
+                            #self.load(player, apple)
+                            self.show_game_screen(player, apple)
                             self.saved=False
                         i[4]()
                         break
