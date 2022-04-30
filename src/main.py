@@ -15,8 +15,8 @@ class Window:
         self.clock = pg.time.Clock()
         self.running = True
         self.font_name = pg.font.match_font(FONT_NAME)
-        self.play=False #if it has been played or not
-        self.saved=False #if there exists saved data or not
+        self.play=False # if it has been played or not
+        self.saved=False # if there exists saved data or not
         self.rank=[]
 
     def quit_game(self):
@@ -33,24 +33,24 @@ class Window:
         text_rect.midtop = (x, y)
         self.screen.blit(text_surface, text_rect)
 
-
+    # main menu screen
     def show_menu_screen(self, player=None, apple=None):
+        # drawing
         background=pg.image.load(staticPath+"image/background.png")
         background_img=pg.transform.scale(background, (WIDTH, HEIGHT))
         self.screen.blit(background_img, (0,0))
         menu_img=pg.image.load(staticPath+"image/menu.png")
         self.screen.blit(menu_img,(WIDTH/3,HEIGHT/4))
-        menu=[] #save each menu button image location
-        #PLAY
-        menu.append([WIDTH/2.5, HEIGHT/4+100, 300,40, self.show_game_screen])
-        #LOAD
-        menu.append([WIDTH/2.5, HEIGHT/4 + 176, 300,40, self.load])
-        #RANKING
-        menu.append([WIDTH/2.5, HEIGHT/4 +250, 300,40, self.ranking])
-        #EXIT
-        menu.append([WIDTH/2.5, HEIGHT/4 +326, 300,40, self.quit_game])
+
+        menu=[] # save each menu button image location
+        menu.append([WIDTH/2.5, HEIGHT/4+100, 300,40, self.show_game_screen]) # PLAY
+        menu.append([WIDTH/2.5, HEIGHT/4 + 176, 300,40, self.load]) # LOAD
+        menu.append([WIDTH/2.5, HEIGHT/4 +250, 300,40, self.ranking]) # RANKING
+        menu.append([WIDTH/2.5, HEIGHT/4 +326, 300,40, self.quit_game]) # EXIT
+
         pg.display.flip()
 
+        # wait for user's interaction
         while self.running:
             for event in pg.event.get():
                 if event.type==pg.MOUSEBUTTONUP:
@@ -58,38 +58,44 @@ class Window:
                     for i in menu:
                         if i[2] + i[0] > mouse[0] > i[0] and i[1] + i[3] > mouse[1] > i[1] and i[4]!=None:
                             if i[4]==self.load or i[4]==self.ranking:
-                                i[4](player, apple) #load or ranking - needs player, apple info
+                                i[4](player, apple) # load or ranking - needs player, apple info
                             else:
-                                i[4]() #else - do not need any info
+                                i[4]() # else - do not need any info
                             break
 
+    # loading screen
     def load(self, player=None, apple=None):
-        #loading game value
+        # drawing
         background=pg.image.load(staticPath+"image/background.png")
         background_img=pg.transform.scale(background, (WIDTH, HEIGHT))
         self.screen.blit(background_img, (0,0))
+
+        # loading previous game value
         if self.saved==True:
             self.draw_text("loading game...", 25, BLACK, WIDTH/2, HEIGHT/3+70)
             pg.display.flip()
             time.sleep(1)
+            # start game
             self.show_game_screen(player, apple)
-        else: #if there's no saved game data
+        else: # if there's no saved game data
             back_button=pg.image.load(staticPath+"image/back_button.png")
             self.screen.blit(back_button,(WIDTH-200,HEIGHT/10+40))
-            menu=[WIDTH-210, HEIGHT/10 +30, 100,100, self.show_menu_screen] #save back button image location
+            menu=[WIDTH-210, HEIGHT/10 +30, 100,100, self.show_menu_screen] # save back button image location
             self.draw_text("There's no saved game data that can be loading", 25, BLACK, WIDTH/2, HEIGHT/3+70)
             pg.display.flip()
+            # wait for user's interaction
             while self.running:
                 for event in pg.event.get():
                     if event.type==pg.MOUSEBUTTONUP:
                         mouse=pg.mouse.get_pos()
                         if menu[2] + menu[0] > mouse[0] > menu[0] and menu[1] + menu[3] > mouse[1] > menu[1] and menu[4]!=None:
-                            self.show_menu_screen()
+                            self.show_menu_screen() # go back to menu screen
                             break
             
 
+    # ranking screen
     def ranking(self, player=None, apple=None):
-        #loading ranking
+        # drawing
         background=pg.image.load(staticPath+"image/background.png")
         background_img=pg.transform.scale(background, (WIDTH, HEIGHT))
         self.screen.blit(background_img, (0,0))
@@ -99,18 +105,22 @@ class Window:
         self.screen.blit(rank_background_img,(WIDTH/4-30,HEIGHT/5))
         self.screen.blit(back_button,(WIDTH-200,HEIGHT/10+40))
 
-        menu=[] #save back button image location
+        menu=[] # save back button image location
         menu.append([WIDTH-210, HEIGHT/10 +30, 100,100, self.show_menu_screen])
+
+        # loading rank data
         if len(self.rank)>0:
             for i in range(len(self.rank)):
-                self.draw_text(str(i+1),22,BLACK,WIDTH/4+60, HEIGHT/3+(30*(i+1))) #rank
-                self.draw_text(str(self.rank[i][0]),22,BLACK,WIDTH/4 + 100,HEIGHT/3+(30*(i+1))) #name
-                self.draw_text(str(self.rank[i][1]),22,BLACK,WIDTH*3/4-50,HEIGHT/3+(30*(i+1))) #score
+                self.draw_text(str(i+1),22,BLACK,WIDTH/4+60, HEIGHT/3+(30*(i+1))) # rank
+                self.draw_text(str(self.rank[i][0]),22,BLACK,WIDTH/4 + 100,HEIGHT/3+(30*(i+1))) # name
+                self.draw_text(str(self.rank[i][1]),22,BLACK,WIDTH*3/4-50,HEIGHT/3+(30*(i+1))) # score
                 print(self.rank)
-        else: #if there's no saved record
+        else: # if there's no saved record
             self.draw_text("There are no records saved yet", 22, BLACK, WIDTH/2+10, HEIGHT/3+70)
+
         pg.display.flip()
 
+        # wait for user's interaction
         while self.running:
             for event in pg.event.get():
                 if event.type==pg.MOUSEBUTTONUP:
@@ -120,15 +130,19 @@ class Window:
                             self.show_menu_screen(player, apple)
                             break
 
+    # game screen
     def show_game_screen(self, player=None, apple=None):
         last_moved_time = datetime.now()
+
+        # if it is new game then make new object
         if player==None:
-            #need to input user name
-            player = Snake() #new player
+            player = Snake() # new player
             apple = Apple()
             self.played=True
         
+        # game running
         while self.running:
+            # drawing
             self.clock.tick(FPS)
             background_img = pg.image.load(staticPath+"image/background.png")
             background_img = pg.transform.scale(background_img, (WIDTH, HEIGHT))
@@ -142,6 +156,7 @@ class Window:
             logo_img = pg.transform.scale(logo_img, (303, 235))
             self.screen.blit(logo_img, (880,200))
      
+            # get user's key interaction
             for event in pg.event.get():
                 if event.type == pg.KEYDOWN:
                     if event.key in KEY_DIRECTION:
@@ -154,20 +169,22 @@ class Window:
                 player.move()
                 last_moved_time = datetime.now()
             
+            # event) get apple
             if player.positions[0] == apple.position:
                 player.grow()    
-                #apple.position = (random.randint(0, (HEIGHT/20)-20), random.randint(0, (WIDTH/20)-20))
+                # apple.position = (random.randint(0, (HEIGHT/20)-20), random.randint(0, (WIDTH/20)-20))
                 apple.position = (random.randint(5, 35), random.randint(10, 40))
-                if apple.position in player.positions: # apple의 position이 snake와 겹칠 시 다른 위치로
-                    apple.position = (random.randint(5, 35), random.randint(10, 40))
-                player.point = player.point + 1 # a point up when snake ate an apple
+                if apple.position in player.positions: #  if new apple's position is overlaps with snake
+                    apple.position = (random.randint(5, 35), random.randint(10, 40)) # repositioning
+                player.point = player.point + 1 #  a point up when snake ate an apple
                 
+            # event) collision with wall
             if player.positions[0][0] < 5 or player.positions[0][0] > 42 or player.positions[0][1] < 3 or player.positions[0][1] > 40:
-                #limit up, down, left and right
                 self.game_over_screen(player, apple)
                 break
             
-            if player.positions[0] in player.positions[1:]: # 스스로를 물면 게임 오버
+            # event) collision with itself
+            if player.positions[0] in player.positions[1:]:
                 self.game_over_screen(player, apple)
                 break
                 
@@ -208,15 +225,17 @@ class Window:
                             if len(text) > 7:
                                 return text[0:7]
 
-            # Render the current text.
+            #  Render the current text.
             txt_surface = font.render(text, True, BLACK)
-            # Blit the text.
+            #  Blit the text.
             self.screen.blit(txt_surface, (568, 544))
 
             pg.display.flip()
             clock.tick(30)
     
+    # game over screen
     def game_over_screen(self, player, apple):
+        # drawing
         gameoverback_img = pg.image.load(staticPath+"image/game_over_back.png")
         gameoverback_img = pg.transform.scale(gameoverback_img, (WIDTH, HEIGHT))
         self.screen.blit(gameoverback_img, (0,0))
@@ -224,10 +243,12 @@ class Window:
         gameover_img = pg.image.load(staticPath+"image/game_over.png")
         gameover_img = pg.transform.scale(gameover_img, (500, 500))
         self.screen.blit(gameover_img, (390,230))
-        
-        self.draw_text(str(player.point), 200, BLACK, 640, 330, '../static/font/poxel.ttf')
+
+        self.draw_text(str(player.point), 200, BLACK, 640, 330, '../static/font/poxel.ttf') # display user's points
         
         pg.display.flip()
+
+        # wait for user's interaction
         while self.running:
             player.user_name = self.text_box()
             self.saved=False
@@ -241,30 +262,25 @@ class Window:
             break
         
         
-    
+    # game menu screen
     def show_game_menu_screen(self,player,apple):
+        # drawing
         gameoverback_img = pg.image.load(staticPath+"image/game_over_back.png")
         gameoverback_img = pg.transform.scale(gameoverback_img, (WIDTH, HEIGHT))
         self.screen.blit(gameoverback_img, (0,0))
         
         background_img=pg.image.load(staticPath+"image/game_menu.png")
-        #self.screen.fill(BGCOLOR)
         self.screen.blit(background_img,(WIDTH/3,HEIGHT/4))
         
-        menu=[] #save menu image location
-        #RESUME
-        menu.append([WIDTH/2.5, HEIGHT/4+100, 300,40, 'resume'])
-
-        #RESTART
-        menu.append([WIDTH/2.5, HEIGHT/4 + 176, 300,40, self.show_game_screen])
-
-        #SAVE
-        menu.append([WIDTH/2.5, HEIGHT/4 +250, 300,40, self.save])
-
-        #EIXT
-        menu.append([WIDTH/2.5, HEIGHT/4 +326, 300,40, self.exit])
+        menu=[] # save menu image location
+        menu.append([WIDTH/2.5, HEIGHT/4+100, 300,40, 'resume']) # RESUME
+        menu.append([WIDTH/2.5, HEIGHT/4 + 176, 300,40, self.show_game_screen]) # RESTART
+        menu.append([WIDTH/2.5, HEIGHT/4 +250, 300,40, self.save]) # SAVE
+        menu.append([WIDTH/2.5, HEIGHT/4 +326, 300,40, self.exit]) # EXIT
 
         pg.display.flip()
+
+        # wait for user's interaction
         while self.running:
             for event in pg.event.get():
                 if event.type==pg.MOUSEBUTTONUP:
@@ -305,8 +321,7 @@ def draw_dot(screen, img, pos):
     
 class Snake:
     def __init__(self):
-        #self.positions = [(HEIGHT/20/2,WIDTH/20/2),((HEIGHT/20/2)+1,WIDTH/20/2),((HEIGHT/20/2)+2,WIDTH/20/2)]  # 뱀의 위치
-        self.positions = [(22, 24),(23, 24),(24, 24)]  # 뱀의 위치
+        self.positions = [(22, 24),(23, 24),(24, 24)]  #  snake's start position
         self.direction = ''
         self.user_name = 'name'
         self.point = 0
