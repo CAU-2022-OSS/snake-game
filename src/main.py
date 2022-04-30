@@ -54,7 +54,6 @@ class Window:
             for event in pg.event.get():
                 if event.type==pg.MOUSEBUTTONUP:
                     mouse=pg.mouse.get_pos()
-                    print(mouse[0], mouse[1])
                     for i in menu:
                         if i[2] + i[0] > mouse[0] > i[0] and i[1] + i[3] > mouse[1] > i[1] and i[4]!=None:
                             if i[4]==self.load or i[4]==self.ranking:
@@ -73,7 +72,7 @@ class Window:
             pg.display.flip()
             time.sleep(1)
             self.show_game_screen(player, apple)
-        else:
+        else: #if there's no saved game data
             back_button=pg.image.load("../static/image/back_button.png")
             self.screen.blit(back_button,(WIDTH-200,HEIGHT/10+40))
             menu=[WIDTH-210, HEIGHT/10 +30, 100,100, self.show_menu_screen] #save back button image location
@@ -81,10 +80,7 @@ class Window:
             pg.display.flip()
             while self.running:
                 for event in pg.event.get():
-                    if event.type==pg.KEYUP and event.key==pg.K_ESCAPE:
-                        self.quit_game()
-                        break
-                    elif event.type==pg.MOUSEBUTTONUP:
+                    if event.type==pg.MOUSEBUTTONUP:
                         mouse=pg.mouse.get_pos()
                         if menu[2] + menu[0] > mouse[0] > menu[0] and menu[1] + menu[3] > mouse[1] > menu[1] and menu[4]!=None:
                             self.show_menu_screen()
@@ -110,16 +106,13 @@ class Window:
                 self.draw_text(str(self.rank[i][0]),22,BLACK,WIDTH/4 + 100,HEIGHT/3+(30*(i+1))) #name
                 self.draw_text(str(self.rank[i][1]),22,BLACK,WIDTH*3/4-50,HEIGHT/3+(30*(i+1))) #score
                 print(self.rank)
-        else:
+        else: #if there's no saved record
             self.draw_text("There are no records saved yet", 22, BLACK, WIDTH/2+10, HEIGHT/3+70)
         pg.display.flip()
 
         while self.running:
             for event in pg.event.get():
-                if event.type==pg.KEYUP and event.key==pg.K_ESCAPE:
-                    self.quit_game()
-                    break
-                elif event.type==pg.MOUSEBUTTONUP:
+                if event.type==pg.MOUSEBUTTONUP:
                     mouse=pg.mouse.get_pos()
                     for i in menu:
                         if i[2] + i[0] > mouse[0] > i[0] and i[1] + i[3] > mouse[1] > i[1] and i[4]!=None:
@@ -223,7 +216,6 @@ class Window:
             clock.tick(30)
     
     def game_over_screen(self, player, apple):
-        print("game over")
         gameoverback_img = pg.image.load("../static/image/game_over_back.png")
         gameoverback_img = pg.transform.scale(gameoverback_img, (WIDTH, HEIGHT))
         self.screen.blit(gameoverback_img, (0,0))
@@ -253,8 +245,6 @@ class Window:
         
     
     def show_game_menu_screen(self,player,apple):
-        print("game menu")
-        
         gameoverback_img = pg.image.load("../static/image/game_over_back.png")
         gameoverback_img = pg.transform.scale(gameoverback_img, (WIDTH, HEIGHT))
         self.screen.blit(gameoverback_img, (0,0))
