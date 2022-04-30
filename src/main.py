@@ -46,12 +46,15 @@ class Window:
 
 
     def show_menu_screen(self, player=None, apple=None):
-        print("menu screen")
-        background_img=pg.image.load("../static/image/menu.png")
-        self.screen.fill(BGCOLOR)
+        #print("menu screen")
+        background=pg.image.load("../static/image/background.png")
+        background_img=pg.transform.scale(background, (WIDTH, HEIGHT))
+        self.screen.blit(background_img, (0,0))
+        #self.screen.fill(BGCOLOR)
         menu=[]
         #draw.rect and draw_text will be replaced by image load
-        self.screen.blit(background_img,(WIDTH/3,HEIGHT/4))
+        menu_img=pg.image.load("../static/image/menu.png")
+        self.screen.blit(menu_img,(WIDTH/3,HEIGHT/4))
         #pg.draw.rect(self.screen, BLACK, [WIDTH/2.5,HEIGHT/4+100,300,40],2)
         #PLAY
         menu.append([WIDTH/2.5, HEIGHT/4+100, 300,40, self.show_game_screen])
@@ -84,7 +87,10 @@ class Window:
 
     def load(self, player=None, apple=None):
         #loading game value
-        self.screen.fill(BGCOLOR)
+        #self.screen.fill(BGCOLOR)
+        background=pg.image.load("../static/image/background.png")
+        background_img=pg.transform.scale(background, (WIDTH, HEIGHT))
+        self.screen.blit(background_img, (0,0))
         #self.draw_text("loading...", 48, WHITE, WIDTH/2, HEIGHT/4)
         if self.saved==True:
             self.draw_text("loading game...", 25, BLACK, WIDTH/2, HEIGHT/3+70)
@@ -122,10 +128,13 @@ class Window:
     def ranking(self, player=None, apple=None):
         #loading ranking
         print("rank")
-        background_img=pg.image.load("../static/image/ranking_board.png")
+        background=pg.image.load("../static/image/background.png")
+        background_img=pg.transform.scale(background, (WIDTH, HEIGHT))
+        self.screen.blit(background_img, (0,0))
+        rank_background_img=pg.image.load("../static/image/ranking_board.png")
         back_button=pg.image.load("../static/image/back_button.png")
-        self.screen.fill(BGCOLOR)
-        self.screen.blit(background_img,(WIDTH/4-30,HEIGHT/5))
+        #self.screen.fill(BGCOLOR)
+        self.screen.blit(rank_background_img,(WIDTH/4-30,HEIGHT/5))
         self.screen.blit(back_button,(WIDTH-200,HEIGHT/10+40))
         menu=[]
         #pg.draw.rect(self.screen, BLACK, [WIDTH-210,HEIGHT/10 + 30,100,100],2)
