@@ -15,7 +15,7 @@ class Window:
         self.running = True
         self.font_name = pg.font.match_font(FONT_NAME)
         self.play=False #if it has been played or not
-        self.saved=False #if there exists savied data or not
+        self.saved=False #if there exists saved data or not
         self.rank=[]
 
     def quit_game(self):
@@ -141,6 +141,14 @@ class Window:
             background_img = pg.image.load("../static/image/background.png")
             background_img = pg.transform.scale(background_img, (WIDTH, HEIGHT))
             self.screen.blit(background_img, (0,0))
+            
+            gameboard_img = pg.image.load("../static/image/game_board.png")
+            gameboard_img = pg.transform.scale(gameboard_img, (800, 800))
+            self.screen.blit(gameboard_img, (45,85))
+            
+            logo_img = pg.image.load("../static/image/logo.png")
+            logo_img = pg.transform.scale(logo_img, (303, 235))
+            self.screen.blit(logo_img, (880,200))
      
             for event in pg.event.get():
                 if event.type == pg.KEYDOWN:
@@ -158,30 +166,120 @@ class Window:
             
             if player.positions[0] == apple.position:
                 player.grow()    
-                apple.position = (random.randint(0, (HEIGHT/20)-20), random.randint(0, (WIDTH/20)-20))
+                #apple.position = (random.randint(0, (HEIGHT/20)-20), random.randint(0, (WIDTH/20)-20))
+                apple.position = (random.randint(5, 35), random.randint(10, 40))
+                if apple.position in player.positions: # apple의 position이 snake와 겹칠 시 다른 위치로
+                    apple.position = (random.randint(5, 35), random.randint(10, 40))
                 player.point = player.point + 1 # a point up when snake ate an apple
-            
-            if player.positions[0] in player.positions[1:]:
+                
+            if player.positions[0][0] < 5 or player.positions[0][0] > 42 or player.positions[0][1] < 3 or player.positions[0][1] > 40:
+                #limit up, down, left and right
                 print("player position..", player.user_name, player.point, player.positions)
-                self.show_game_menu_screen(player,apple)
+                self.game_over_screen(player, apple)
+                #self.show_game_menu_screen(player,apple)
+                break
+            
+            if player.positions[0] in player.positions[1:]: # 스스로를 물면 게임 오버
+                print("player position..", player.user_name, player.point, player.positions)
+                self.game_over_screen(player, apple)
+                #self.show_game_menu_screen(player,apple)
                 break
                 
             player.draw(self.screen)
             apple.draw(self.screen)
-            self.draw_text(str(player.point), 22, BLACK, 40, 0)
+            self.draw_text(str(player.point), 200, BLACK, 1050, 500)
             pg.display.update()
+    
+    def game_over_screen(self, player, apple):
+        print("game over")
+        gameoverback_img = pg.image.load("../static/image/game_over_back.png")
+        gameoverback_img = pg.transform.scale(gameoverback_img, (WIDTH, HEIGHT))
+        self.screen.blit(gameoverback_img, (0,0))
+
+        gameover_img = pg.image.load("../static/image/game_over.png")
+        gameover_img = pg.transform.scale(gameover_img, (500, 500))
+        self.screen.blit(gameover_img, (390,230))
+        
+        self.draw_text(str(player.point), 200, BLACK, 640, 330)
+        
+        pg.display.flip()
+        while self.running:
+
+            for event in pg.event.get():
+                if event.type == pg.KEYDOWN:
+                    if event.key==pg.K_ESCAPE:
+                        print("escape", player.user_name, player.point, player.positions)
+                        self.show_game_menu_screen(player, apple)
+                        break
+                    
+        # 이름 입력 칸 미완성
+        '''
+        text1 = 'Name?'
+        font1 = pg.font.Font('../static/font/poxel.ttf',21)
+        img1 = font1.render(text1,True,BLACK)
+         
+        rect1 = img1.get_rect()
+        rect1.topleft = (570,550)
+        rect1.width = 182
+        rect1.height = 43
+        cursor1 = pg.Rect(rect1.topright,(3,rect1.height))
+        print(cursor1)
+        
+        running = True
+        
+        pg.display.flip()
+        while self.running:
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    running = False
+         
+                if event.type == pg.KEYDOWN:
+                    if event.key == pg.K_BACKSPACE:
+                        if len(text1)> 0:
+                            text1 = text1[:-1]
+                            print("x")
+         
+                    #elif event.key == pg.K_g:
+                    #    print(chr(12622))
+                    #    text1 += chr(12622)
+                    else:
+                        text1 += event.unicode
+                        print("o")
+                    img1 = font1.render(text1,True,BLACK)
+                    rect1.size = img1.get_size()
+                    cursor1.topleft = rect1.topright
+         
+            #self.screen.fill(BLUE)
+            self.screen.blit(img1,rect1)
+            if time.time() % 1 > 0.5:
+                pg.draw.rect(self.screen, BLACK, cursor1)
+            pg.display.update()
+         
+        pg.quit()
+        
+        
+        '''
+        
+        
+        
     
     def show_game_menu_screen(self,player,apple):
         print("game menu")
+        
+        gameoverback_img = pg.image.load("../static/image/game_over_back.png")
+        gameoverback_img = pg.transform.scale(gameoverback_img, (WIDTH, HEIGHT))
+        self.screen.blit(gameoverback_img, (0,0))
+        
         background_img=pg.image.load("../static/image/game_menu.png")
-        self.screen.fill(BGCOLOR)
+        #self.screen.fill(BGCOLOR)
         self.screen.blit(background_img,(WIDTH/3,HEIGHT/4))
         
         menu=[]
         #draw.rect and draw_text will be replaced by image load
         #pg.draw.rect(self.screen, BLACK, [WIDTH/2.5,HEIGHT/4+100,300,40],2)
         #RESUME
-        menu.append([WIDTH/2.5, HEIGHT/4+100, 300,40, self.show_game_screen])
+        #menu.append([WIDTH/2.5, HEIGHT/4+100, 300,40, self.show_game_screen])
+        menu.append([WIDTH/2.5, HEIGHT/4+100, 300,40, 'resume'])
 
         #pg.draw.rect(self.screen, BLACK, [WIDTH/2.5,HEIGHT/4 + 176,300,40],2)
         #RESTART
@@ -205,6 +303,11 @@ class Window:
                         if i[4]==self.exit or i[4]==self.save:
                             print(i[4])
                             i[4](player,apple)
+                        elif i[4]=='resume':
+                            print('resume')
+                            self.saved=True
+                            self.load(player, apple)
+                            self.saved=False
                         i[4]()
                         break
 
@@ -251,7 +354,8 @@ def draw_dot(screen, img, pos):
     
 class Snake:
     def __init__(self):
-        self.positions = [(HEIGHT/20/2,WIDTH/20/2),((HEIGHT/20/2)+1,WIDTH/20/2),((HEIGHT/20/2)+2,WIDTH/20/2)]  # 뱀의 위치
+        #self.positions = [(HEIGHT/20/2,WIDTH/20/2),((HEIGHT/20/2)+1,WIDTH/20/2),((HEIGHT/20/2)+2,WIDTH/20/2)]  # 뱀의 위치
+        self.positions = [(22, 24),(23, 24),(24, 24)]  # 뱀의 위치
         self.direction = ''
         self.user_name = 'name'
         self.point = 0
@@ -293,14 +397,14 @@ class Snake:
         pass
 
 class Apple:
-    def __init__(self, position=(10,10)):
+    def __init__(self, position=(random.randint(5, 35), random.randint(10, 40))):
         self.position = position
  
     def draw(self, screen):
         draw_dot(screen, "../static/image/apple.png", self.position)
 
     def initialize(self):
-        self.position=(10,10)
+        self.position=(random.randint(3, 40), random.randint(5, 42))
 
 window = Window()
 window.show_menu_screen()
