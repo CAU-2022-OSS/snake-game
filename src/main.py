@@ -37,8 +37,11 @@ class Window:
                     return 2
         
 
-    def draw_text(self, text, size, color, x, y):
-        font = pg.font.Font(self.font_name, size)
+    def draw_text(self, text, size, color, x, y, fontName=''):
+        if fontName == '':
+            font = pg.font.Font(self.font_name, size)
+        else:
+            font = pg.font.Font(fontName, size)
         text_surface = font.render(text, True, color)
         text_rect = text_surface.get_rect()
         text_rect.midtop = (x, y)
@@ -221,8 +224,44 @@ class Window:
                 
             player.draw(self.screen)
             apple.draw(self.screen)
-            self.draw_text(str(player.point), 200, BLACK, 1050, 500)
+            self.draw_text(str(player.point), 200, BLACK, 1050, 500, '../static/font/poxel.ttf')
             pg.display.update()
+    
+    def text_box(self):
+        font = pg.font.Font('../static/font/poxel.ttf', 32)
+        clock = pg.time.Clock()
+        input_box = pg.Rect(564, 539, 184, 44)
+        color_inactive = pg.Color(BLACK)
+        color_active = pg.Color(BLACK)
+        color = color_inactive
+        active = True
+        text = ''
+        done = False
+
+        while not done:
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    done = True
+
+                if event.type == pg.KEYDOWN:
+                    if active:
+                        if event.key == pg.K_RETURN:
+                            print(text)
+                            return text
+                        elif event.key == pg.K_BACKSPACE:
+                            text = text[:-1]
+                        else:
+                            text += event.unicode
+                            if len(text) > 7:
+                                return text[0:7]
+
+            # Render the current text.
+            txt_surface = font.render(text, True, color)
+            # Blit the text.
+            self.screen.blit(txt_surface, (568, 544))
+
+            pg.display.flip()
+            clock.tick(30)
     
     def game_over_screen(self, player, apple):
         print("game over")
@@ -234,65 +273,13 @@ class Window:
         gameover_img = pg.transform.scale(gameover_img, (500, 500))
         self.screen.blit(gameover_img, (390,230))
         
-        self.draw_text(str(player.point), 200, BLACK, 640, 330)
+        self.draw_text(str(player.point), 200, BLACK, 640, 330, '../static/font/poxel.ttf')
         
         pg.display.flip()
         while self.running:
-
-            for event in pg.event.get():
-                if event.type == pg.KEYDOWN:
-                    if event.key==pg.K_ESCAPE:
-                        print("escape", player.user_name, player.point, player.positions)
-                        self.show_game_menu_screen(player, apple)
-                        break
-                    
-        # 이름 입력 칸 미완성
-        '''
-        text1 = 'Name?'
-        font1 = pg.font.Font('../static/font/poxel.ttf',21)
-        img1 = font1.render(text1,True,BLACK)
-         
-        rect1 = img1.get_rect()
-        rect1.topleft = (570,550)
-        rect1.width = 182
-        rect1.height = 43
-        cursor1 = pg.Rect(rect1.topright,(3,rect1.height))
-        print(cursor1)
-        
-        running = True
-        
-        pg.display.flip()
-        while self.running:
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    running = False
-         
-                if event.type == pg.KEYDOWN:
-                    if event.key == pg.K_BACKSPACE:
-                        if len(text1)> 0:
-                            text1 = text1[:-1]
-                            print("x")
-         
-                    #elif event.key == pg.K_g:
-                    #    print(chr(12622))
-                    #    text1 += chr(12622)
-                    else:
-                        text1 += event.unicode
-                        print("o")
-                    img1 = font1.render(text1,True,BLACK)
-                    rect1.size = img1.get_size()
-                    cursor1.topleft = rect1.topright
-         
-            #self.screen.fill(BLUE)
-            self.screen.blit(img1,rect1)
-            if time.time() % 1 > 0.5:
-                pg.draw.rect(self.screen, BLACK, cursor1)
-            pg.display.update()
-         
-        pg.quit()
-        
-        
-        '''
+            
+            player.user_name = self.text_box()
+            self.show_game_menu_screen(player, apple)
         
         
         
