@@ -231,9 +231,6 @@ class Window:
         font = pg.font.Font('../static/font/poxel.ttf', 32)
         clock = pg.time.Clock()
         input_box = pg.Rect(564, 539, 184, 44)
-        color_inactive = pg.Color(BLACK)
-        color_active = pg.Color(BLACK)
-        color = color_inactive
         active = True
         text = ''
         done = False
@@ -242,6 +239,13 @@ class Window:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     done = True
+                    
+                if event.type == pg.MOUSEBUTTONUP:
+                    mouse=pg.mouse.get_pos()
+                    print(mouse)
+                    if 680 > mouse[0] > 600 and 653 > mouse[1] > 605:
+                        print(text)
+                        return text
 
                 if event.type == pg.KEYDOWN:
                     if active:
@@ -256,7 +260,7 @@ class Window:
                                 return text[0:7]
 
             # Render the current text.
-            txt_surface = font.render(text, True, color)
+            txt_surface = font.render(text, True, BLACK)
             # Blit the text.
             self.screen.blit(txt_surface, (568, 544))
 
@@ -275,12 +279,15 @@ class Window:
         
         self.draw_text(str(player.point), 200, BLACK, 640, 330, '../static/font/poxel.ttf')
         
+        #input_box = pg.Rect(600, 605, 80, 48)
+        #pg.draw.rect(self.screen, RED, input_box, 2)
+        
         pg.display.flip()
         while self.running:
             
             player.user_name = self.text_box()
-            self.show_game_menu_screen(player, apple)
-        
+            self.exit(player,apple)
+            break
         
         
     
