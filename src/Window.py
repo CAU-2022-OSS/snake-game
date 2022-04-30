@@ -118,7 +118,6 @@ class Window:
                 self.draw_text(str(i+1),22,BLACK,WIDTH/4+60, HEIGHT/3+(30*(i+1))) # rank
                 self.draw_text(str(self.rank[i][0]),22,BLACK,WIDTH/4 + 100,HEIGHT/3+(30*(i+1))) # name
                 self.draw_text(str(self.rank[i][1]),22,BLACK,WIDTH*3/4-50,HEIGHT/3+(30*(i+1))) # score
-                print(self.rank)
         else: # if there's no saved record
             self.draw_text("There are no records saved yet", 22, BLACK, WIDTH/2+10, HEIGHT/3+70)
 
@@ -167,7 +166,6 @@ class Window:
                     if event.key in KEY_DIRECTION:
                         player.direction = KEY_DIRECTION[event.key]
                     elif event.key==pg.K_ESCAPE:
-                        print("escape", player.user_name, player.point, player.positions)
                         self.show_game_menu_screen(player, apple)
                         
             if timedelta(seconds=0.1) <= datetime.now() - last_moved_time:
@@ -214,15 +212,12 @@ class Window:
                     
                 if event.type == pg.MOUSEBUTTONUP:
                     mouse=pg.mouse.get_pos()
-                    print(mouse)
                     if 680 > mouse[0] > 600 and 653 > mouse[1] > 605:
-                        print(text)
                         return text
 
                 if event.type == pg.KEYDOWN:
                     if active:
                         if event.key == pg.K_RETURN:
-                            print(text)
                             return text
                         elif event.key == pg.K_BACKSPACE:
                             text = text[:-1]
