@@ -304,14 +304,6 @@ class Window:
         self.saved=False
         self.show_menu_screen()
 
- 
-KEY_DIRECTION = {
-    pg.K_UP: 'N',
-    pg.K_DOWN: 'S',
-    pg.K_LEFT: 'W',
-    pg.K_RIGHT: 'E',
-}
-
 def draw_dot(screen, img, pos):
     block_img = pg.image.load(img)
     block_img.get_rect().size = (20,20)

@@ -1,3 +1,5 @@
+import pygame as pg
+
 TITLE = "Snake Game"
 WIDTH = 1280
 HEIGHT = 960
@@ -6,9 +8,10 @@ FONT_NAME = 'arial'
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
-YELLOW = (255, 255, 0)
-LIGHTBLUE = (0, 155, 155)
-BGCOLOR = LIGHTBLUE
+
+KEY_DIRECTION = {
+    pg.K_UP: 'N',
+    pg.K_DOWN: 'S',
+    pg.K_LEFT: 'W',
+    pg.K_RIGHT: 'E',
+}
