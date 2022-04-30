@@ -177,7 +177,7 @@ class Window:
                 player.grow()    
                 # apple.position = (random.randint(0, (HEIGHT/20)-20), random.randint(0, (WIDTH/20)-20))
                 apple.position = (random.randint(5, 35), random.randint(10, 40))
-                while(apple.position in player.positions): #  if new apple's position is overlaps with snake
+                while(apple.position in player.positions): #  while new apple's position overlaps with snake
                     apple.position = (random.randint(5, 35), random.randint(10, 40)) # repositioning
                 player.point = player.point + 1 #  a point up when snake ate an apple
                 
