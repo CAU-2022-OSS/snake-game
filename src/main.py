@@ -5,7 +5,6 @@ from datetime import datetime
 from datetime import timedelta
 import random
 
-staticPath = "../static/"
 
 class Window:
     def __init__(self):
@@ -36,10 +35,10 @@ class Window:
     # main menu screen
     def show_menu_screen(self, player=None, apple=None):
         # drawing
-        background=pg.image.load(staticPath+"image/background.png")
+        background=pg.image.load(STATIC_PATH+"image/background.png")
         background_img=pg.transform.scale(background, (WIDTH, HEIGHT))
         self.screen.blit(background_img, (0,0))
-        menu_img=pg.image.load(staticPath+"image/menu.png")
+        menu_img=pg.image.load(STATIC_PATH+"image/menu.png")
         self.screen.blit(menu_img,(WIDTH/3,HEIGHT/4))
 
         menu=[] # save each menu button image location
@@ -66,7 +65,7 @@ class Window:
     # loading screen
     def load(self, player=None, apple=None):
         # drawing
-        background=pg.image.load(staticPath+"image/background.png")
+        background=pg.image.load(STATIC_PATH+"image/background.png")
         background_img=pg.transform.scale(background, (WIDTH, HEIGHT))
         self.screen.blit(background_img, (0,0))
 
@@ -78,7 +77,7 @@ class Window:
             # start game
             self.show_game_screen(player, apple)
         else: # if there's no saved game data
-            back_button=pg.image.load(staticPath+"image/back_button.png")
+            back_button=pg.image.load(STATIC_PATH+"image/back_button.png")
             self.screen.blit(back_button,(WIDTH-200,HEIGHT/10+40))
             menu=[WIDTH-210, HEIGHT/10 +30, 100,100, self.show_menu_screen] # save back button image location
             self.draw_text("There's no saved game data that can be loading", 25, BLACK, WIDTH/2, HEIGHT/3+70)
@@ -96,12 +95,12 @@ class Window:
     # ranking screen
     def ranking(self, player=None, apple=None):
         # drawing
-        background=pg.image.load(staticPath+"image/background.png")
+        background=pg.image.load(STATIC_PATH+"image/background.png")
         background_img=pg.transform.scale(background, (WIDTH, HEIGHT))
         self.screen.blit(background_img, (0,0))
 
-        rank_background_img=pg.image.load(staticPath+"image/ranking_board.png")
-        back_button=pg.image.load(staticPath+"image/back_button.png")
+        rank_background_img=pg.image.load(STATIC_PATH+"image/ranking_board.png")
+        back_button=pg.image.load(STATIC_PATH+"image/back_button.png")
         self.screen.blit(rank_background_img,(WIDTH/4-30,HEIGHT/5))
         self.screen.blit(back_button,(WIDTH-200,HEIGHT/10+40))
 
@@ -144,15 +143,15 @@ class Window:
         while self.running:
             # drawing
             self.clock.tick(FPS)
-            background_img = pg.image.load(staticPath+"image/background.png")
+            background_img = pg.image.load(STATIC_PATH+"image/background.png")
             background_img = pg.transform.scale(background_img, (WIDTH, HEIGHT))
             self.screen.blit(background_img, (0,0))
             
-            gameboard_img = pg.image.load(staticPath+"image/game_board.png")
+            gameboard_img = pg.image.load(STATIC_PATH+"image/game_board.png")
             gameboard_img = pg.transform.scale(gameboard_img, (800, 800))
             self.screen.blit(gameboard_img, (45,85))
             
-            logo_img = pg.image.load(staticPath+"image/logo.png")
+            logo_img = pg.image.load(STATIC_PATH+"image/logo.png")
             logo_img = pg.transform.scale(logo_img, (303, 235))
             self.screen.blit(logo_img, (880,200))
      
@@ -236,11 +235,11 @@ class Window:
     # game over screen
     def game_over_screen(self, player, apple):
         # drawing
-        gameoverback_img = pg.image.load(staticPath+"image/game_over_back.png")
+        gameoverback_img = pg.image.load(STATIC_PATH+"image/game_over_back.png")
         gameoverback_img = pg.transform.scale(gameoverback_img, (WIDTH, HEIGHT))
         self.screen.blit(gameoverback_img, (0,0))
 
-        gameover_img = pg.image.load(staticPath+"image/game_over.png")
+        gameover_img = pg.image.load(STATIC_PATH+"image/game_over.png")
         gameover_img = pg.transform.scale(gameover_img, (500, 500))
         self.screen.blit(gameover_img, (390,230))
 
@@ -265,11 +264,11 @@ class Window:
     # game menu screen
     def show_game_menu_screen(self,player,apple):
         # drawing
-        gameoverback_img = pg.image.load(staticPath+"image/game_over_back.png")
+        gameoverback_img = pg.image.load(STATIC_PATH+"image/game_over_back.png")
         gameoverback_img = pg.transform.scale(gameoverback_img, (WIDTH, HEIGHT))
         self.screen.blit(gameoverback_img, (0,0))
         
-        background_img=pg.image.load(staticPath+"image/game_menu.png")
+        background_img=pg.image.load(STATIC_PATH+"image/game_menu.png")
         self.screen.blit(background_img,(WIDTH/3,HEIGHT/4))
         
         menu=[] # save menu image location
@@ -319,9 +318,9 @@ class Snake:
         self.point = 0
 
     def draw(self, screen):
-        draw_dot(screen, staticPath+"image/snake_head.png", self.positions[0])
+        draw_dot(screen, STATIC_PATH+"image/snake_head.png", self.positions[0])
         for position in self.positions[1:]: 
-            draw_dot(screen, staticPath+"image/snake_body.png", position)
+            draw_dot(screen, STATIC_PATH+"image/snake_body.png", position)
  
     def move(self):
         head_position = self.positions[0]
@@ -359,7 +358,7 @@ class Apple:
         self.position = position
  
     def draw(self, screen):
-        draw_dot(screen, staticPath+"image/apple.png", self.position)
+        draw_dot(screen, STATIC_PATH+"image/apple.png", self.position)
 
     def initialize(self):
         self.position=(random.randint(3, 40), random.randint(5, 42))

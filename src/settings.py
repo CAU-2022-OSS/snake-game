@@ -5,6 +5,7 @@ WIDTH = 1280
 HEIGHT = 960
 FPS = 60
 FONT_NAME = 'arial'
+STATIC_PATH = "../static/"
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
