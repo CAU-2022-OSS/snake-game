@@ -222,7 +222,6 @@ class Window:
                         elif event.key == pg.K_BACKSPACE:
                             text = text[:-1]
                         elif re.match("[a-zA-Z0-9]", event.unicode): # allow only english and number
-                            print(event.unicode)
                             text += event.unicode
                             if len(text) > 7:
                                 return text[0:7]
