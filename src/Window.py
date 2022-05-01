@@ -5,7 +5,7 @@ from settings import *
 from datetime import datetime
 from datetime import timedelta
 from Element import Apple, Snake
-
+import re
 
 class Window:
     def __init__(self):
@@ -221,7 +221,8 @@ class Window:
                             return text
                         elif event.key == pg.K_BACKSPACE:
                             text = text[:-1]
-                        else:
+                        elif re.match("[a-zA-Z0-9]", event.unicode): # allow only english and number
+                            print(event.unicode)
                             text += event.unicode
                             if len(text) > 7:
                                 return text[0:7]
