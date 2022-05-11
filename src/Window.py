@@ -42,14 +42,16 @@ class Window:
         background=pg.image.load(STATIC_PATH+"image/background.png")
         background_img=pg.transform.scale(background, (WIDTH, HEIGHT))
         self.screen.blit(background_img, (0,0))
-        menu_img=pg.image.load(STATIC_PATH+"image/menu.png")
+        menu_img=pg.image.load(STATIC_PATH+"image/v2_menu.png")
         self.screen.blit(menu_img,(WIDTH/3,HEIGHT/4))
 
         menu=[] # save each menu button image location
-        menu.append([WIDTH/2.5, HEIGHT/4+100, 300,40, self.show_game_screen]) # PLAY
-        menu.append([WIDTH/2.5, HEIGHT/4 + 176, 300,40, self.load]) # LOAD
-        menu.append([WIDTH/2.5, HEIGHT/4 +250, 300,40, self.ranking]) # RANKING
-        menu.append([WIDTH/2.5, HEIGHT/4 +326, 300,40, self.quit_game]) # EXIT
+        menu.append([WIDTH/2.5, HEIGHT/4+75, 300,40, self.show_game_screen]) # SINGLE PLAY
+        #menu.append([WIDTH/2.5, HEIGHT/4+130, 300,40, self.show_game_screen]) #DUAL PLAY
+        #menu.append([WIDTH/2.5, HEIGHT/4+185, 300,40, self.show_game_screen]) #AUTO PLAY
+        menu.append([WIDTH/2.5, HEIGHT/4+245, 300,40, self.load]) # LOAD
+        menu.append([WIDTH/2.5, HEIGHT/4+300, 300,40, self.ranking]) # RANKING
+        menu.append([WIDTH/2.5, HEIGHT/4+355, 300,40, self.quit_game]) # EXIT
 
         pg.display.flip()
 
