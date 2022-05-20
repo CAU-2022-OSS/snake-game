@@ -48,7 +48,7 @@ class Window:
         menu=[] # save each menu button image location
         menu.append([WIDTH/2.5, HEIGHT/4+75, 300,40, self.show_game_screen]) # SINGLE PLAY
         #menu.append([WIDTH/2.5, HEIGHT/4+130, 300,40, self.show_game_screen]) #DUAL PLAY
-        #menu.append([WIDTH/2.5, HEIGHT/4+185, 300,40, self.show_game_screen]) #AUTO PLAY
+        menu.append([WIDTH/2.5, HEIGHT/4+185, 300,40, self.show_automode_screen]) #AUTO PLAY
         menu.append([WIDTH/2.5, HEIGHT/4+245, 300,40, self.load]) # LOAD
         menu.append([WIDTH/2.5, HEIGHT/4+300, 300,40, self.ranking]) # RANKING
         menu.append([WIDTH/2.5, HEIGHT/4+355, 300,40, self.quit_game]) # EXIT
@@ -300,6 +300,105 @@ class Window:
                             i[4]()
                             break
 
+
+    def show_automode_screen(self, player=None, apple=None):
+        #self.show_game_screen(player, apple)
+        last_moved_time = datetime.now()
+
+        # if it is new game then make new object
+        if player==None:
+            player = Snake() # new player
+            apple = Apple()
+            self.played=True
+        
+        # game running
+        while self.running:
+            # drawing
+            self.clock.tick(FPS)
+            background_img = pg.image.load(STATIC_PATH+"image/background.png")
+            background_img = pg.transform.scale(background_img, (WIDTH, HEIGHT))
+            self.screen.blit(background_img, (0,0))
+            
+            gameboard_img = pg.image.load(STATIC_PATH+"image/game_board.png")
+            gameboard_img = pg.transform.scale(gameboard_img, (800, 800))
+            self.screen.blit(gameboard_img, (45,85))
+            
+            logo_img = pg.image.load(STATIC_PATH+"image/logo.png")
+            logo_img = pg.transform.scale(logo_img, (303, 235))
+            self.screen.blit(logo_img, (880,200))
+     
+            # get user's key interaction
+            for event in pg.event.get():
+                if event.type == pg.KEYDOWN:
+                    #if event.key in KEY_DIRECTION:
+                    #    player.direction = KEY_DIRECTION[event.key]
+                    if event.key==pg.K_ESCAPE:
+                        self.show_game_menu_screen(player, apple)
+                        
+            if timedelta(seconds=0.1) <= datetime.now() - last_moved_time:
+                if player.direction!='':
+                    self.auto_move(player, apple)
+                else:
+                    player.direction='N'
+                    player.move()
+                last_moved_time = datetime.now()
+            
+            # event) get apple
+            if player.positions[0] == apple.position:
+                player.grow()    
+                # apple.position = (random.randint(0, (HEIGHT/20)-20), random.randint(0, (WIDTH/20)-20))
+                apple.position = (random.randint(5, 35), random.randint(10, 40))
+                while(apple.position in player.positions): #  while new apple's position overlaps with snake
+                    apple.position = (random.randint(5, 35), random.randint(10, 40)) # repositioning
+                player.point = player.point + 1 #  a point up when snake ate an apple
+                
+            # event) collision with wall
+            if player.positions[0][0] < 5 or player.positions[0][0] > 42 or player.positions[0][1] < 3 or player.positions[0][1] > 40:
+                self.game_over_screen(player, apple)
+                break
+            
+            # event) collision with itself
+            if player.positions[0] in player.positions[1:]:
+                self.game_over_screen(player, apple)
+                break
+                
+            player.draw(self.screen)
+            apple.draw(self.screen)
+            self.draw_text(str(player.point), 200, BLACK, 1050, 500, '../static/font/poxel.ttf')
+            pg.display.update()
+
+    def auto_move(self, player=None, apple=None):
+        directions = ['N', 'E', 'S', 'W']
+        current_direction = directions.index(player.direction)
+        head_position = player.positions[0]
+        diff_head = [head_position[0]-apple.position[0], head_position[1]-apple.position[1]]
+        tail_position = player.positions[-1]
+        diff_tail = [tail_position[0]-apple.position[0], tail_position[1]-apple.position[1]]
+        if abs(diff_tail[current_direction%2])<abs(diff_head[current_direction%2]) or diff_head[(current_direction)%2]==0:
+            if player.direction == 'N':
+                if diff_head[1]<0:
+                    player.direction = 'E'
+                else:
+                    player.direction = 'W'
+            elif player.direction == 'S':
+                if diff_head[1]<0:
+                    player.direction = 'E'
+                else:
+                    player.direction = 'W'
+            elif player.direction == 'E':
+                if diff_head[0]<0:
+                    player.direction = 'S'
+                else:
+                    player.direction = 'N'
+            elif player.direction == 'W':
+                if diff_head[0]<0:
+                    player.direction = 'S'
+                else:
+                    player.direction = 'N'
+        else:
+            pass
+                
+        player.move()
 
     def save(self,player=None,apple=None):
         self.saved=True
