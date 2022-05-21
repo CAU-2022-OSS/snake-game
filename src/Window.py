@@ -333,7 +333,7 @@ class Window:
                     #if event.key in KEY_DIRECTION:
                     #    player.direction = KEY_DIRECTION[event.key]
                     if event.key==pg.K_ESCAPE:
-                        self.show_game_menu_screen(player, apple)
+                        self.show_automode_game_menu_screen(player, apple)
                         
             if timedelta(seconds=0.1) <= datetime.now() - last_moved_time:
                 if player.direction!='':
@@ -354,12 +354,12 @@ class Window:
                 
             # event) collision with wall
             if player.positions[0][0] < 5 or player.positions[0][0] > 42 or player.positions[0][1] < 3 or player.positions[0][1] > 40:
-                self.game_over_screen(player, apple)
+                self.automode_game_over_screen(player, apple)
                 break
             
             # event) collision with itself
             if player.positions[0] in player.positions[1:]:
-                self.game_over_screen(player, apple)
+                self.automode_game_over_screen(player, apple)
                 break
                 
             player.draw(self.screen)
@@ -375,22 +375,14 @@ class Window:
         tail_position = player.positions[-1]
         diff_tail = [tail_position[0]-apple.position[0], tail_position[1]-apple.position[1]]
         if abs(diff_tail[current_direction%2])<abs(diff_head[current_direction%2]) or diff_head[(current_direction)%2]==0:
-            if player.direction == 'N':
+            if current_direction%2==0 :
+                #player.direction == 'N' or 'S'
                 if diff_head[1]<0:
                     player.direction = 'E'
                 else:
                     player.direction = 'W'
-            elif player.direction == 'S':
-                if diff_head[1]<0:
-                    player.direction = 'E'
-                else:
-                    player.direction = 'W'
-            elif player.direction == 'E':
-                if diff_head[0]<0:
-                    player.direction = 'S'
-                else:
-                    player.direction = 'N'
-            elif player.direction == 'W':
+            elif current_direction%2==1:
+                #player.direction == 'E' or 'W':
                 if diff_head[0]<0:
                     player.direction = 'S'
                 else:
@@ -399,6 +391,67 @@ class Window:
             pass
                 
         player.move()
+
+    def show_automode_game_menu_screen(self,player,apple):
+        # drawing
+        gameoverback_img = pg.image.load(STATIC_PATH+"image/game_over_back.png")
+        gameoverback_img = pg.transform.scale(gameoverback_img, (WIDTH, HEIGHT))
+        self.screen.blit(gameoverback_img, (0,0))
+        
+        background_img=pg.image.load(STATIC_PATH+"image/v2_ap_game_menu.png")
+        self.screen.blit(background_img,(WIDTH/3,HEIGHT/4))
+        
+        menu=[] # save menu image location
+        menu.append([WIDTH/2.5, HEIGHT/4+100, 300,60, 'resume']) # RESUME
+        menu.append([WIDTH/2.5, HEIGHT/4+200, 300,60, self.show_game_screen]) # RESTART
+        menu.append([WIDTH/2.5, HEIGHT/4+300, 300,60, self.exit]) # EXIT
+
+        pg.display.flip()
+
+        # wait for user's interaction
+        while self.running:
+            for event in pg.event.get():
+                if event.type==pg.MOUSEBUTTONUP:
+                    mouse=pg.mouse.get_pos()
+                    for i in menu:
+                        if i[2] + i[0] > mouse[0] > i[0] and i[1] + i[3] > mouse[1] > i[1] and i[4]!=None:
+                            if i[4]==self.save:
+                                i[4](player,apple)
+                            elif i[4]=='resume':
+                                self.saved=True
+                                self.show_game_screen(player, apple)
+                                self.saved=False
+                            i[4]()
+                            break
+
+
+    def automode_game_over_screen(self, player, apple):
+            # drawing
+            gameoverback_img = pg.image.load(STATIC_PATH+"image/game_over_back.png")
+            gameoverback_img = pg.transform.scale(gameoverback_img, (WIDTH, HEIGHT))
+            self.screen.blit(gameoverback_img, (0,0))
+
+            gameover_img = pg.image.load(STATIC_PATH+"image/v2_ap_game_over.png")
+            gameover_img = pg.transform.scale(gameover_img, (500, 500))
+            self.screen.blit(gameover_img, (390,230))
+            self.draw_text(str(player.point), 200, BLACK, 640, 330, '../static/font/poxel.ttf') # display user's points
+            
+            pg.display.flip()
+
+            # wait for user's interaction
+            while self.running:
+                
+                #self.show_menu_screen()
+                
+                for event in pg.event.get():
+                    if event.type==pg.MOUSEBUTTONUP:
+                        mouse=pg.mouse.get_pos()
+                        if 680 > mouse[0] > 590 and 658 > mouse[1] > 608:
+                            self.saved=False
+                            player.initialize()
+                            apple.initialize()
+                            self.show_menu_screen()
+                            break
 
     def save(self,player=None,apple=None):
         self.saved=True
