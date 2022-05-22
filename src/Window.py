@@ -371,10 +371,16 @@ class Window:
         directions = ['N', 'E', 'S', 'W']
         current_direction = directions.index(player.direction)
         head_position = player.positions[0]
+        next_position=[(head_position[0]-1, head_position[1]),(head_position[0], head_position[1]+1), (head_position[0]+1, head_position[1]), (head_position[0], head_position[1]-1)]
         diff_head = [head_position[0]-apple.position[0], head_position[1]-apple.position[1]]
         tail_position = player.positions[-1]
         diff_tail = [tail_position[0]-apple.position[0], tail_position[1]-apple.position[1]]
-        if abs(diff_tail[current_direction%2])<abs(diff_head[current_direction%2]) or diff_head[(current_direction)%2]==0:
+        
+        
+        if (head_position[(current_direction+1)%2]==tail_position[(current_direction+1)%2] and abs(diff_tail[current_direction%2])<abs(diff_head[current_direction%2])) or (diff_head[(current_direction)%2]==0):
+            #1)apple position is opposite part of snake -> have to turn opposite -> go left or right
+            #2)snake is like | and it's y position is same as apple's y position -> go left or right
+            #3)snake is like ㅡ and it's x position is same as apple's x position -> go left or right
             if current_direction%2==0 :
                 #player.direction == 'N' or 'S'
                 if diff_head[1]<0:
@@ -387,9 +393,23 @@ class Window:
                     player.direction = 'S'
                 else:
                     player.direction = 'N'
+            current_direction = directions.index(player.direction)
         else:
             pass
-                
+        
+        
+        if (next_position[current_direction] in player.positions[1:-1]) or (next_position[current_direction][0]<5 or next_position[current_direction][0]>42 or next_position[current_direction][1]<3 or next_position[current_direction][1]>40):
+            tmp=[]
+            for i in range(1,4):
+                next= next_position[(current_direction+i)%4]
+                if (next not in player.positions[1:-1]) and (5<=next[0]<=42 and 3<=next[1]<=40):
+                    length=(apple.position[0]-next[0])**2+(apple.position[1]-next[1])**2
+                    tmp.append((directions[(current_direction+i)%4],length))
+            if len(tmp)>=1:
+                tmp.sort(key=lambda x:x[1])
+                player.direction=tmp[0][0]
+
+
         player.move()
 
     def show_automode_game_menu_screen(self,player,apple):
@@ -403,7 +423,7 @@ class Window:
         
         menu=[] # save menu image location
         menu.append([WIDTH/2.5, HEIGHT/4+100, 300,60, 'resume']) # RESUME
-        menu.append([WIDTH/2.5, HEIGHT/4+200, 300,60, self.show_game_screen]) # RESTART
+        menu.append([WIDTH/2.5, HEIGHT/4+200, 300,60, self.show_automode_screen]) # RESTART
         menu.append([WIDTH/2.5, HEIGHT/4+300, 300,60, self.exit]) # EXIT
 
         pg.display.flip()
@@ -415,11 +435,9 @@ class Window:
                     mouse=pg.mouse.get_pos()
                     for i in menu:
                         if i[2] + i[0] > mouse[0] > i[0] and i[1] + i[3] > mouse[1] > i[1] and i[4]!=None:
-                            if i[4]==self.save:
-                                i[4](player,apple)
-                            elif i[4]=='resume':
+                            if i[4]=='resume':
                                 self.saved=True
-                                self.show_game_screen(player, apple)
+                                self.show_automode_screen(player, apple)
                                 self.saved=False
                             i[4]()
                             break
@@ -440,9 +458,6 @@ class Window:
 
             # wait for user's interaction
             while self.running:
-                
-                #self.show_menu_screen()
-                
                 for event in pg.event.get():
                     if event.type==pg.MOUSEBUTTONUP:
                         mouse=pg.mouse.get_pos()
