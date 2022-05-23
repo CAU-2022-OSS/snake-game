@@ -367,49 +367,30 @@ class Window:
             self.draw_text(str(player.point), 200, BLACK, 1050, 500, '../static/font/poxel.ttf')
             pg.display.update()
 
+
+    global priority
+    priority = [[0 for col in range(50)] for row in range(50)]
+    cnt = 0
+    for i in range(3, 41):
+        priority[5][43 - i] = cnt
+        cnt += 1
+    for i in range(3, 41):
+        for j in range(6, 43):
+            priority[j if i % 2 == 1 else 48 - j][i] = cnt
+            cnt += 1
+
     def auto_move(self, player=None, apple=None):
-        directions = ['N', 'E', 'S', 'W']
-        current_direction = directions.index(player.direction)
-        head_position = player.positions[0]
-        next_position=[(head_position[0]-1, head_position[1]),(head_position[0], head_position[1]+1), (head_position[0]+1, head_position[1]), (head_position[0], head_position[1]-1)]
-        diff_head = [head_position[0]-apple.position[0], head_position[1]-apple.position[1]]
-        tail_position = player.positions[-1]
-        diff_tail = [tail_position[0]-apple.position[0], tail_position[1]-apple.position[1]]
-        
-        
-        if (head_position[(current_direction+1)%2]==tail_position[(current_direction+1)%2] and abs(diff_tail[current_direction%2])<abs(diff_head[current_direction%2])) or (diff_head[(current_direction)%2]==0):
-            #1)apple position is opposite part of snake -> have to turn opposite -> go left or right
-            #2)snake is like | and it's y position is same as apple's y position -> go left or right
-            #3)snake is like ㅡ and it's x position is same as apple's x position -> go left or right
-            if current_direction%2==0 :
-                #player.direction == 'N' or 'S'
-                if diff_head[1]<0:
-                    player.direction = 'E'
-                else:
-                    player.direction = 'W'
-            elif current_direction%2==1:
-                #player.direction == 'E' or 'W':
-                if diff_head[0]<0:
-                    player.direction = 'S'
-                else:
-                    player.direction = 'N'
-            current_direction = directions.index(player.direction)
+        global priority
+        y = player.positions[0][0]
+        x = player.positions[0][1]
+        if y != 5 and x != 40 and (y <= 42 or y >= 6) and ((5, 40) not in player.positions[1:] or x + 2 < player.positions[len(player.positions) - 1][1]) and (x + 1 < apple.position[1] or x > apple.position[1] or (apple.position[0] == y and apple.position[1] - 1 == x)) : 
+            next = 'E'
         else:
-            pass
-        
-        
-        if (next_position[current_direction] in player.positions[1:-1]) or (next_position[current_direction][0]<5 or next_position[current_direction][0]>42 or next_position[current_direction][1]<3 or next_position[current_direction][1]>40):
-            tmp=[]
-            for i in range(1,4):
-                next= next_position[(current_direction+i)%4]
-                if (next not in player.positions[1:-1]) and (5<=next[0]<=42 and 3<=next[1]<=40):
-                    length=(apple.position[0]-next[0])**2+(apple.position[1]-next[1])**2
-                    tmp.append((directions[(current_direction+i)%4],length))
-            if len(tmp)>=1:
-                tmp.sort(key=lambda x:x[1])
-                player.direction=tmp[0][0]
-
-
+            if priority[y][x] + 1 == priority[y][x + 1]: next = 'E'
+            elif priority[y][x] + 1 == priority[y][x - 1]: next = 'W'
+            elif priority[y][x] + 1 == priority[y + 1][x]: next = 'S'
+            else: next = 'N'
+        player.direction = next
         player.move()
 
     def show_automode_game_menu_screen(self,player,apple):
