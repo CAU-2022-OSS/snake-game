@@ -376,36 +376,47 @@ class Window:
         tail_position = player.positions[-1]
         diff_tail = [tail_position[0]-apple.position[0], tail_position[1]-apple.position[1]]
         
-        
+        #if snake's direction is N/S -> have to compare y position : diff_head[0], diff_tail[0]
+        #elif snake's direction is E/W -> have to compare x position : diff_head[1], diff_tail[1]
+        #in list directions, index is N:0, E:1, S:2, W:3 -> use current_direction%2 (N/S->0(y), E/W->1(x))
         if (head_position[(current_direction+1)%2]==tail_position[(current_direction+1)%2] and abs(diff_tail[current_direction%2])<abs(diff_head[current_direction%2])) or (diff_head[(current_direction)%2]==0):
-            #1)apple position is opposite part of snake -> have to turn opposite -> go left or right
-            #2)snake is like | and it's y position is same as apple's y position -> go left or right
-            #3)snake is like ㅡ and it's x position is same as apple's x position -> go left or right
+            #1)apple position is opposite part of snake(apple is closer to its tail than its head) and not a process of rotation(head, tail's x or y position compare) -> have to turn -> go left or right
+            #2)snake is like | and it's y position is same as apple's y position -> have to turn
+            #3)snake is like ㅡ and it's x position is same as apple's x position -> have to turn
             if current_direction%2==0 :
-                #player.direction == 'N' or 'S'
+                #player.direction == 'N' or 'S': snake looks like |
                 if diff_head[1]<0:
+                    #it's right part of map. so direction -> 'E'
                     player.direction = 'E'
                 else:
+                    #it's left part of map. so direction -> 'W'
                     player.direction = 'W'
             elif current_direction%2==1:
-                #player.direction == 'E' or 'W':
+                #player.direction == 'E' or 'W': snake looks like ㅡ
                 if diff_head[0]<0:
+                    #it's downward part of map. so direction -> 'S'
                     player.direction = 'S'
                 else:
+                    #it's upward part of map. so direction -> 'N'
                     player.direction = 'N'
+            #update current direction
             current_direction = directions.index(player.direction)
         else:
             pass
         
         
+        #check end condition
         if (next_position[current_direction] in player.positions[1:-1]) or (next_position[current_direction][0]<5 or next_position[current_direction][0]>42 or next_position[current_direction][1]<3 or next_position[current_direction][1]>40):
             tmp=[]
             for i in range(1,4):
+                #calculate next position of current chosen direction
                 next= next_position[(current_direction+i)%4]
                 if (next not in player.positions[1:-1]) and (5<=next[0]<=42 and 3<=next[1]<=40):
+                    #calculate distance of apple and next snake head of current chosen direction
                     length=(apple.position[0]-next[0])**2+(apple.position[1]-next[1])**2
                     tmp.append((directions[(current_direction+i)%4],length))
             if len(tmp)>=1:
+                #if there's available directions more than 1, nearest direction from apple is chosen.
                 tmp.sort(key=lambda x:x[1])
                 player.direction=tmp[0][0]
 
