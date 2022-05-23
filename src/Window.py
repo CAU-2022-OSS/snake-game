@@ -345,7 +345,8 @@ class Window:
             
             # event) get apple
             if player.positions[0] == apple.position:
-                player.grow()    
+                cnt = 0
+                player.grow()
                 # apple.position = (random.randint(0, (HEIGHT/20)-20), random.randint(0, (WIDTH/20)-20))
                 apple.position = (random.randint(5, 42), random.randint(3, 40))
                 while(apple.position in player.positions): #  while new apple's position overlaps with snake
@@ -387,7 +388,7 @@ class Window:
         global priority
         y = player.positions[0][0]
         x = player.positions[0][1]
-        if y != 5 and x != 40 and (y <= 42 or y >= 6) and ((5, 40) not in player.positions[1:] or x + 2 < player.positions[len(player.positions) - 1][1]) and (x + 1 < apple.position[1] or x > apple.position[1] or (apple.position[0] == y and apple.position[1] - 1 == x)) : 
+        if x != 40 and y >= 6 and ((5, 40) not in player.positions[1:] or x + 2 < player.positions[len(player.positions) - 1][1]) and (x + 1 < apple.position[1] or x > apple.position[1] or (apple.position[0] == y and apple.position[1] - 1 == x)) : 
             next = 'E'
         else:
             if priority[y][x] + 1 == priority[y][x + 1]: next = 'E'
