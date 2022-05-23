@@ -335,7 +335,7 @@ class Window:
                     if event.key==pg.K_ESCAPE:
                         self.show_automode_game_menu_screen(player, apple)
                         
-            if timedelta(seconds=0.1) <= datetime.now() - last_moved_time:
+            if timedelta(seconds=0.01) <= datetime.now() - last_moved_time:
                 if player.direction!='':
                     self.auto_move(player, apple)
                 else:
@@ -347,9 +347,13 @@ class Window:
             if player.positions[0] == apple.position:
                 player.grow()    
                 # apple.position = (random.randint(0, (HEIGHT/20)-20), random.randint(0, (WIDTH/20)-20))
-                apple.position = (random.randint(5, 35), random.randint(10, 40))
+                apple.position = (random.randint(5, 42), random.randint(3, 40))
                 while(apple.position in player.positions): #  while new apple's position overlaps with snake
-                    apple.position = (random.randint(5, 35), random.randint(10, 40)) # repositioning
+                    apple.position = (random.randint(5, 42), random.randint(3, 40)) # repositioning
+                    cnt += 1
+                    if cnt > 10000:
+                        self.automode_game_over_screen(player, apple)
+                        break
                 player.point = player.point + 1 #  a point up when snake ate an apple
                 
             # event) collision with wall
