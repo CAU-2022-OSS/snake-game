@@ -119,7 +119,7 @@ class SnakeWasd(Snake): # control snake by wasd key
 
 
 class Apple:
-    def __init__(self, position=(random.randint(12, 52), random.randint(3, 81))):
+    def __init__(self, position=(random.randint(5, 35), random.randint(10, 40))):
         self.position = position
  
     def draw(self, screen):
