@@ -64,6 +64,7 @@ class SnakeArrow(Snake): # control snake by Arrow key
         self.direction = ''
         self.user_name = 'name'
         self.point = 0
+        self.is_dead = 0
         
     def draw(self, screen):
         draw_dot(screen, STATIC_PATH+"image/v2_dp_p2_head.png", self.positions[0], 15)
@@ -80,6 +81,7 @@ class SnakeWasd(Snake): # control snake by wasd key
         self.direction = ''
         self.user_name = 'name'
         self.point = 0
+        self.is_dead = 0
         
     def draw(self, screen):
         draw_dot(screen, STATIC_PATH+"image/v2_dp_p1_head.png", self.positions[0], 15)

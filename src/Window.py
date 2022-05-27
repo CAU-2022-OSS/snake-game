@@ -246,20 +246,38 @@ class Window:
 
             
             # event) collision with wall
-            if (player1.positions[0][0] < 12 or player2.positions[0][0] < 12 or
-                player1.positions[0][0] > 51 or player2.positions[0][0] > 51 or
-                player1.positions[0][1] < 3 or player2.positions[0][1] < 3 or
-                player1.positions[0][1] > 81 or player2.positions[0][1] > 81):
+            if (player1.positions[0][0] < 12 or
+                player1.positions[0][0] > 51 or
+                player1.positions[0][1] < 3 or
+                player1.positions[0][1] > 81):
+                player1.is_dead = 1
+                self.dual_game_over_screen(player1, player2, apple1, apple2)
+                break
+            if (player2.positions[0][0] < 12 or
+                player2.positions[0][0] > 51 or
+                player2.positions[0][1] < 3 or
+                player2.positions[0][1] > 81):
+                player2.is_dead = 1
                 self.dual_game_over_screen(player1, player2, apple1, apple2)
                 break
             
             # event) collision with itself
-            if player1.positions[0] in player1.positions[1:] or player2.positions[0] in player2.positions[1:]:
+            if player1.positions[0] in player1.positions[1:]:
+                player1.is_dead = 1
+                self.dual_game_over_screen(player1, player2, apple1, apple2)
+                break
+            if player2.positions[0] in player2.positions[1:]:
+                player2.is_dead = 1
                 self.dual_game_over_screen(player1, player2, apple1, apple2)
                 break
             
             # event) collision each other
-            if player1.positions[0] in player2.positions[0:] or player2.positions[0] in player1.positions[0:]:
+            if player1.positions[0] in player2.positions[0:]: # player1 is dead
+                player1.is_dead = 1
+                self.dual_game_over_screen(player1, player2, apple1, apple2)
+                break
+            if player2.positions[0] in player1.positions[0:]: # player2 is dead
+                player2.is_dead = 1
                 self.dual_game_over_screen(player1, player2, apple1, apple2)
                 break
             
@@ -342,9 +360,11 @@ class Window:
         player2_win_img = pg.image.load(STATIC_PATH+"image/v2_dp_p2_win_bg.png")
         player2_win_img = pg.transform.scale(player2_win_img, (WIDTH, HEIGHT))
         
-        if player1.point > player2.point:
+        if player2.is_dead == 1:
+            player2.is_dead = 0
             self.screen.blit(player1_win_img, (0,0))
-        else:
+        if player1.is_dead == 1:
+            player1.is_dead = 0
             self.screen.blit(player2_win_img, (0,0))
             
         pg.display.flip()
