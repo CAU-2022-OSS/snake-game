@@ -44,8 +44,12 @@ class Snake:
             self.positions.append((y+1, x))
         elif self.direction == 'W':
             self.positions.append((y, x-1))
-        elif self.direction == 'C':
-            self.positions.append((y, x+1))      
+        elif self.direction == 'E':
+            self.positions.append((y, x+1))
+        else:
+            print("nothing")
+            print(self.direction)
+        print(self.positions)
     
     def initialize(self):
         self.user_name='name'
@@ -56,7 +60,7 @@ class Snake:
 
 class SnakeArrow(Snake): # control snake by Arrow key
     def __init__(self):
-        self.positions = [(22, 24),(23, 24),(24, 24)]  #  snake's start position
+        self.positions = [(40, 74),(41, 74),(42, 74)]  #  snake's start position
         self.direction = ''
         self.user_name = 'name'
         self.point = 0
@@ -72,7 +76,7 @@ class SnakeArrow(Snake): # control snake by Arrow key
     
 class SnakeWasd(Snake): # control snake by wasd key
     def __init__(self):
-        self.positions = [(40, 24),(39, 24),(38, 24)]  #  snake's start position
+        self.positions = [(20, 10),(19, 10),(18, 10)]  #  snake's start position
         self.direction = ''
         self.user_name = 'name'
         self.point = 0
@@ -93,6 +97,7 @@ class SnakeWasd(Snake): # control snake by wasd key
             self.positions = [(y, x-1)] + self.positions[:-1]
         elif self.direction == 'Ed':
             self.positions = [(y, x+1)] + self.positions[:-1]
+        #print(self.positions)
  
     def grow(self):
         tail_position = self.positions[-1]
@@ -103,7 +108,7 @@ class SnakeWasd(Snake): # control snake by wasd key
             self.positions.append((y+1, x))
         elif self.direction == 'Wa':
             self.positions.append((y, x-1))
-        elif self.direction == 'Cd':
+        elif self.direction == 'Ed':
             self.positions.append((y, x+1))
     
     def initialize(self):

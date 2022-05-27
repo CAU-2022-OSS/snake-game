@@ -201,9 +201,9 @@ class Window:
             player2 = SnakeArrow() # new player2
             apple1 = dualApple((random.randint(12, 52), random.randint(3, 81)))
             apple2 = dualApple((random.randint(12, 52), random.randint(3, 81)))
-            appleList = [apple1, apple2]
             self.played=True
         
+        appleList = [apple1, apple2]
         # game running
         while self.running:
             # drawing
@@ -230,24 +230,24 @@ class Window:
             # event) get apple
             for i in appleList:
                 if player1.positions[0] == i.position:
-                    player1.grow()    
+                    player1.grow()
                     # apple.position = (random.randint(0, (HEIGHT/20)-20), random.randint(0, (WIDTH/20)-20))
-                    i.position = (random.randint(12, 52), random.randint(3, 81))
+                    i.position = (random.randint(12, 51), random.randint(3, 81))
                     while(i.position in (player1.positions, player2.positions)): #  while new apple's position overlaps with snake
-                        i.position = (random.randint(12, 52), random.randint(3, 81)) # repositioning
+                        i.position = (random.randint(12, 51), random.randint(3, 81)) # repositioning
                     player1.point = player1.point + 1 #  a point up when snake ate an apple
-                if player2.positions[0]  == i.position:
-                    player2.grow()    
+                elif player2.positions[0]  == i.position:
+                    player2.grow()
                     # apple.position = (random.randint(0, (HEIGHT/20)-20), random.randint(0, (WIDTH/20)-20))
-                    i.position = (random.randint(12, 52), random.randint(3, 81))
+                    i.position = (random.randint(12, 51), random.randint(3, 81))
                     while(i.position in (player1.positions, player2.positions)): #  while new apple's position overlaps with snake
-                        i.position = (random.randint(12, 52), random.randint(3, 81)) # repositioning
+                        i.position = (random.randint(12, 51), random.randint(3, 81)) # repositioning
                     player2.point = player2.point + 1 #  a point up when snake ate an apple
 
             
             # event) collision with wall
             if (player1.positions[0][0] < 12 or player2.positions[0][0] < 12 or
-                player1.positions[0][0] > 52 or player2.positions[0][0] > 52 or
+                player1.positions[0][0] > 51 or player2.positions[0][0] > 51 or
                 player1.positions[0][1] < 3 or player2.positions[0][1] < 3 or
                 player1.positions[0][1] > 81 or player2.positions[0][1] > 81):
                 self.dual_game_over_screen(player1, player2, apple1, apple2)
@@ -267,7 +267,6 @@ class Window:
             player2.draw(self.screen)
             apple1.draw(self.screen)
             apple2.draw(self.screen)
-            #self.draw_text(str(player.point), 200, BLACK, 1050, 500, '../static/font/poxel.ttf')
             pg.display.update()
 
     def text_box(self):
@@ -372,10 +371,10 @@ class Window:
         self.screen.blit(background_img,(WIDTH/3,HEIGHT/4))
         
         menu=[] # save menu image location
-        menu.append([WIDTH/2.5, HEIGHT/4+100, 300,40, 'resume']) # RESUME
+        menu.append([WIDTH/2.5, HEIGHT/4 + 100, 300,40, 'resume']) # RESUME
         menu.append([WIDTH/2.5, HEIGHT/4 + 176, 300,40, self.show_single_game_screen]) # RESTART
-        menu.append([WIDTH/2.5, HEIGHT/4 +250, 300,40, self.save]) # SAVE
-        menu.append([WIDTH/2.5, HEIGHT/4 +326, 300,40, self.exit]) # EXIT
+        menu.append([WIDTH/2.5, HEIGHT/4 + 250, 300,40, self.save]) # SAVE
+        menu.append([WIDTH/2.5, HEIGHT/4 + 326, 300,40, self.exit]) # EXIT
 
         pg.display.flip()
 
@@ -402,7 +401,7 @@ class Window:
         
         menu=[] # save menu image location
         menu.append([WIDTH/2.5, HEIGHT/4 + 100, 300,40, 'resume']) # RESUME
-        menu.append([WIDTH/2.5, HEIGHT/4 + 176, 300,40, self.show_single_game_screen]) # RESTART
+        menu.append([WIDTH/2.5, HEIGHT/4 + 176, 300,40, self.show_dual_game_screen]) # RESTART
         menu.append([WIDTH/2.5, HEIGHT/4 +326, 300,40, self.exit]) # EXIT
         
         pg.display.flip()
