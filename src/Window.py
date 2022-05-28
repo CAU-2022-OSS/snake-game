@@ -420,9 +420,9 @@ class Window:
         self.screen.blit(pause_img, (0,0))
         
         menu=[] # save menu image location
-        menu.append([WIDTH/2.5, HEIGHT/4 + 100, 300,40, 'resume']) # RESUME
-        menu.append([WIDTH/2.5, HEIGHT/4 + 176, 300,40, self.show_dual_game_screen]) # RESTART
-        menu.append([WIDTH/2.5, HEIGHT/4 +326, 300,40, self.exit]) # EXIT
+        menu.append([WIDTH/2.5, HEIGHT/4 + 100, 300,60, 'resume']) # RESUME
+        menu.append([WIDTH/2.5, HEIGHT/4 + 200, 300,60, self.show_dual_game_screen]) # RESTART
+        menu.append([WIDTH/2.5, HEIGHT/4 +300, 300,60, self.exit]) # EXIT
         
         pg.display.flip()
 
