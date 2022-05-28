@@ -43,7 +43,7 @@ class Window:
         self.screen.blit(menu_img,(WIDTH/3,HEIGHT/4))
 
         menu=[] # save each menu button image location
-        menu.append([WIDTH/2.5, HEIGHT/4+75, 300,40, self.show_game_screen]) # SINGLE PLAY
+        menu.append([WIDTH/2.5, HEIGHT/4+75, 300,40, self.show_single_game_screen]) # SINGLE PLAY
         menu.append([WIDTH/2.5, HEIGHT/4+130, 300,40, self.show_dual_game_screen]) #DUAL PLAY
         menu.append([WIDTH/2.5, HEIGHT/4+185, 300,40, self.show_automode_screen]) #AUTO PLAY
         menu.append([WIDTH/2.5, HEIGHT/4+245, 300,40, self.load]) # LOAD
