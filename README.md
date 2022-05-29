@@ -1,9 +1,7 @@
 <br />
 <br />
 <div align="center">
-  <a href="https://isgplay.com">
-    <img src="/static/image/logo.png" alt="Logo" height="120">
-  </a>
+    <img src="static/image/logo.png" alt="Logo" height="120">
 
   <h3 align="center"> DotS </h3>
 
@@ -27,10 +25,13 @@ _This project is a assignment of OSS(Open Source SW Project), [CSE, CAU](http://
 
 # Snapshot
 
-| Menu                      | Game                      | Rank                      |
-| ------------------------- | ------------------------- | ------------------------- |
+| Menu                      | Single Play               | Rank                      |
+| ------------------------- |---------------------------| ------------------------- |
 | <img src="docs/menu.png"> | <img src="docs/game.png"> | <img src="docs/rank.png"> |
 
+| Dual Play            | Auto Play                      |
+|----------------------|--------------------------------|
+| <img src="docs/dual_play.png"> | <img src="docs/auto_play.png"> |
 <br>
 <br>
 
