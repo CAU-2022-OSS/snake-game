@@ -1,4 +1,4 @@
 [flake8]
 inline-quotes = double
 max-line-length = 120
-exclude = .pytest_cache,__pycache__,alembic,quantitative_investment
+exclude = .pytest_cache,__pycache__
