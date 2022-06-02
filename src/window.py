@@ -1,11 +1,11 @@
-import pygame as pg
-import time
 import random
-from settings import *
-from datetime import datetime
-from datetime import timedelta
-from element import Apple, dualApple, Snake, SnakeArrow, SnakeWasd
 import re
+import time
+from datetime import datetime, timedelta
+import pygame as pg
+
+from element import Apple, Snake, SnakeArrow, SnakeWasd, dualApple
+from settings import *
 
 
 class Window:
