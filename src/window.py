@@ -4,7 +4,7 @@ import random
 from settings import *
 from datetime import datetime
 from datetime import timedelta
-from Element import Apple, dualApple, Snake, SnakeArrow, SnakeWasd
+from element import Apple, dualApple, Snake, SnakeArrow, SnakeWasd
 import re
 
 
