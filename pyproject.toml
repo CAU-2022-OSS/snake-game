@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "snake-game"
+version = "0.1.0"
+description = "Python implementation of snake game"
+authors = ["<mskim9967@gmail.com>, <yejigong00@gmail.com>, <khmkoh@naver.com>"]
+license = ""
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pygame = "^2.1.2"
+
+[tool.poetry.dev-dependencies]
+black = "^22.3.0"
+flake8-quotes = "^3.3.1"
+flake8 = "^4.0.1"
+
+[tool.black]
+exclude = '''
+/(
+    \.git
+  | \.mypy_cache
+  | \.pytest_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | env
+  | venv
+)/'''
+include = '\.pyi?$'
+line-length = 120
+py37 = true
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

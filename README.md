@@ -14,7 +14,7 @@
 <br />
 <br />
 
-# About This Project
+## About This Project
 
 **Dots**(Dots Snake Game) is a GUI based pc game that is a derivative version of snake game.
 
@@ -23,21 +23,21 @@ _This project is a assignment of OSS(Open Source SW Project), [CSE, CAU](http://
 <br>
 <br>
 
-# Snapshot
+## Snapshot
 
 | Menu                      | Single Play               | Rank                      |
-| ------------------------- |---------------------------| ------------------------- |
+| ------------------------- | ------------------------- | ------------------------- |
 | <img src="docs/menu.png"> | <img src="docs/game.png"> | <img src="docs/rank.png"> |
 
-| Dual Play            | Auto Play                      |
-|----------------------|--------------------------------|
+| Dual Play                      | Auto Play                      |
+| ------------------------------ | ------------------------------ |
 | <img src="docs/dual_play.png"> | <img src="docs/auto_play.png"> |
 <br>
 <br>
 
-# Installation
+## Installation
 
-1. Install [python(v3.x)](https://www.python.org/downloads), [pygame](https://www.pygame.org/wiki/GettingStarted), [git](https://git-scm.com/downloads)
+1. Install [python(v3.x)](https://www.python.org/downloads), [git](https://git-scm.com/downloads) and [poetry](https://python-poetry.org/docs/#installation) on your system if you don't have them yet
 
 2. Clone the remote repository from github
 
@@ -45,25 +45,26 @@ _This project is a assignment of OSS(Open Source SW Project), [CSE, CAU](http://
 $ git clone https://github.com/CAU-2022-OSS/snake-game.git
 ```
 
-3. Install font in **static/font/poxel.ttf**
+3. Install dependencies
+```bash
+poetry install
+```
 
 4. Move to src directory
 
 ```bash
-$ cd snake-game/src
+cd snake-game/src
 ```
 
 5. Execute main.py
 
 ```bash
-$ python main.py
-// or (depend on your version)
-$ python3 main.py
+poetry run python main.py
 ```
 
+<br>
 
-
-# Contributor
+## Contributor
 
 <table width="900">
 <thead>
@@ -72,7 +73,7 @@ $ python3 main.py
 		<th width="80" align="center">Department</th>
         <th width="250" align="center">Role</th>
         <th width="150" align="center">Github</th>
-    </tr> 
+    </tr>
 </thead>
 
 <tbody>
@@ -80,7 +81,7 @@ $ python3 main.py
        <td width="70" align="center">공예지</td>
 		<td width="80" align="center">소프트웨어학부</td>
         <td width="250" align="center">Menu / Data Logic dev</td>
-        <td width="150" align="center">	
+        <td width="150" align="center">
 	        <a href="https://github.com/YejiGong">
 	            <img src="https://img.shields.io/badge/YejiGong-655ced?style=social&logo=github"/>
 	        </a>
@@ -90,7 +91,7 @@ $ python3 main.py
         <td width="70" align="center">권혁민</td>
 		<td width="250" align="center">소프트웨어학부</td>
         <td width="250" align="center">Game Logic dev</td>
-        <td width="150" align="center">	
+        <td width="150" align="center">
 	        <a href="https://github.com/ArfiTech">
 	            <img src="https://img.shields.io/badge/ArfiTech-655ced?style=social&logo=github"/>
 	        </a>
@@ -100,14 +101,14 @@ $ python3 main.py
         <td width="70" align="center">김명승</td>
 		<td width="250" align="center">소프트웨어학부</td>
         <td width="250" align="center">UI, Documentation</td>
-        <td width="150" align="center">	
+        <td width="150" align="center">
 	        <a href="https://github.com/mskim9967">
 	            <img src="https://img.shields.io/badge/mskim9967-655ced?style=social&logo=github"/>
 	        </a>
         </td>
     </tr>
     <tr>
-   
+
 </tbody>
 </table>
 <br>
