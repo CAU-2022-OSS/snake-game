@@ -3,7 +3,7 @@ name = "snake-game"
 version = "0.1.0"
 description = "Python implementation of snake game"
 authors = ["<mskim9967@gmail.com>, <yejigong00@gmail.com>, <khmkoh@naver.com>"]
-license = "YejiGong"
+license = ""
 
 [tool.poetry.dependencies]
 python = "^3.8"
