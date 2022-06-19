@@ -18,6 +18,10 @@ class Window:
         self.play=False # if it has been played or not
         self.saved=False # if there exists saved data or not
         self.rank=[]
+        pg.mixer.init()
+        pg.mixer.music.load('../static/snake_music.mp3')
+        pg.mixer.music.play()
+        pg.mixer.music.set_volume(0.5)
 
     def quit_game(self):
         self.running=False
@@ -92,7 +96,7 @@ class Window:
                         mouse=pg.mouse.get_pos()
                         if menu[2] + menu[0] > mouse[0] > menu[0] and menu[1] + menu[3] > mouse[1] > menu[1] and menu[4]!=None:
                             self.show_menu_screen() # go back to menu screen
-                            break     
+                            break
 
     # ranking screen
     def ranking(self, player=None, apple=None):
@@ -139,7 +143,7 @@ class Window:
             player = Snake() # new player
             apple = Apple()
             self.played=True
-        
+
         # game running
         while self.running:
             # drawing
@@ -147,15 +151,15 @@ class Window:
             background_img = pg.image.load(STATIC_PATH+"image/background.png")
             background_img = pg.transform.scale(background_img, (WIDTH, HEIGHT))
             self.screen.blit(background_img, (0,0))
-            
+
             gameboard_img = pg.image.load(STATIC_PATH+"image/game_board.png")
             gameboard_img = pg.transform.scale(gameboard_img, (800, 800))
             self.screen.blit(gameboard_img, (45,85))
-            
+
             logo_img = pg.image.load(STATIC_PATH+"image/logo.png")
             logo_img = pg.transform.scale(logo_img, (303, 235))
             self.screen.blit(logo_img, (880,200))
-     
+
             # get user's key interaction
             for event in pg.event.get():
                 if event.type == pg.KEYDOWN:
@@ -163,35 +167,35 @@ class Window:
                         player.direction = KEY_DIRECTION2[event.key]
                     elif event.key==pg.K_ESCAPE:
                         self.show_game_menu_screen(player, apple)
-                        
+
             if timedelta(seconds=0.1) <= datetime.now() - last_moved_time:
                 player.move()
                 last_moved_time = datetime.now()
-            
+
             # event) get apple
             if player.positions[0] == apple.position:
-                player.grow()    
+                player.grow()
                 # apple.position = (random.randint(0, (HEIGHT/20)-20), random.randint(0, (WIDTH/20)-20))
                 apple.position = (random.randint(5, 35), random.randint(10, 40))
                 while(apple.position in player.positions): #  while new apple's position overlaps with snake
                     apple.position = (random.randint(5, 35), random.randint(10, 40)) # repositioning
                 player.point = player.point + 1 #  a point up when snake ate an apple
-                
+
             # event) collision with wall
             if player.positions[0][0] < 5 or player.positions[0][0] > 42 or player.positions[0][1] < 3 or player.positions[0][1] > 40:
                 self.game_over_screen(player, apple)
                 break
-            
+
             # event) collision with itself
             if player.positions[0] in player.positions[1:]:
                 self.game_over_screen(player, apple)
                 break
-                
+
             player.draw(self.screen)
             apple.draw(self.screen)
             self.draw_text(str(player.point), 200, BLACK, 1050, 500, '../static/font/poxel.ttf')
             pg.display.update()
-    
+
     def show_dual_game_screen(self, player1=None, player2=None, apple1=None, apple2=None):
         last_moved_time = datetime.now()
 
@@ -202,7 +206,7 @@ class Window:
             apple1 = dualApple((random.randint(12, 52), random.randint(3, 81)))
             apple2 = dualApple((random.randint(12, 52), random.randint(3, 81)))
             self.played=True
-        
+
         appleList = [apple1, apple2]
         # game running
         while self.running:
@@ -221,12 +225,12 @@ class Window:
                         player2.direction = KEY_DIRECTION2[event.key]
                     elif event.key==pg.K_ESCAPE:
                         self.dual_game_menu_screen(player1, player2, apple1, apple2)
-                        
+
             if timedelta(seconds=0.1) <= datetime.now() - last_moved_time:
                 player1.move()
                 player2.move()
                 last_moved_time = datetime.now()
-            
+
             # event) get apple
             for i in appleList:
                 if player1.positions[0] == i.position:
@@ -244,7 +248,7 @@ class Window:
                         i.position = (random.randint(12, 51), random.randint(3, 81)) # repositioning
                     player2.point = player2.point + 1 #  a point up when snake ate an apple
 
-            
+
             # event) collision with wall
             if (player1.positions[0][0] < 12 or
                 player1.positions[0][0] > 51 or
@@ -260,7 +264,7 @@ class Window:
                 player2.is_dead = 1
                 self.dual_game_over_screen(player1, player2, apple1, apple2)
                 break
-            
+
             # event) collision with itself
             if player1.positions[0] in player1.positions[1:]:
                 player1.is_dead = 1
@@ -270,7 +274,7 @@ class Window:
                 player2.is_dead = 1
                 self.dual_game_over_screen(player1, player2, apple1, apple2)
                 break
-            
+
             # event) collision each other
             if player1.positions[0] in player2.positions[0:]: # player1 is dead
                 player1.is_dead = 1
@@ -280,7 +284,7 @@ class Window:
                 player2.is_dead = 1
                 self.dual_game_over_screen(player1, player2, apple1, apple2)
                 break
-            
+
             player1.draw(self.screen)
             player2.draw(self.screen)
             apple1.draw(self.screen)
@@ -299,7 +303,7 @@ class Window:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     done = True
-                    
+
                 if event.type == pg.MOUSEBUTTONUP:
                     mouse=pg.mouse.get_pos()
                     if 680 > mouse[0] > 600 and 653 > mouse[1] > 605:
@@ -323,7 +327,7 @@ class Window:
 
             pg.display.flip()
             clock.tick(30)
-    
+
 
     # game over screen
     def game_over_screen(self, player, apple):
@@ -337,7 +341,7 @@ class Window:
         self.screen.blit(gameover_img, (390,230))
 
         self.draw_text(str(player.point), 200, BLACK, 640, 330, '../static/font/poxel.ttf') # display user's points
-        
+
         pg.display.flip()
 
         # wait for user's interaction
@@ -351,24 +355,24 @@ class Window:
             player.initialize()
             apple.initialize()
             self.show_menu_screen()
-            break      
-        
+            break
+
     def dual_game_over_screen(self, player1, player2, apple1, apple2):
         player1_win_img = pg.image.load(STATIC_PATH+"image/v2_dp_p1_win.png")
         player1_win_img = pg.transform.scale(player1_win_img, (WIDTH, HEIGHT))
-        
+
         player2_win_img = pg.image.load(STATIC_PATH+"image/v2_dp_p2_win_bg.png")
         player2_win_img = pg.transform.scale(player2_win_img, (WIDTH, HEIGHT))
-        
+
         if player2.is_dead == 1:
             player2.is_dead = 0
             self.screen.blit(player1_win_img, (0,0))
         if player1.is_dead == 1:
             player1.is_dead = 0
             self.screen.blit(player2_win_img, (0,0))
-            
+
         pg.display.flip()
-            
+
         while self.running:
             player1.initialize()
             player2.initialize()
@@ -377,19 +381,19 @@ class Window:
             for event in pg.event.get():
                 if event.type == pg.KEYDOWN:
                     self.show_menu_screen()
-                    break 
-            
-        
+                    break
+
+
     # game menu screen
     def show_game_menu_screen(self,player,apple):
         # drawing
         gameoverback_img = pg.image.load(STATIC_PATH+"image/game_over_back.png")
         gameoverback_img = pg.transform.scale(gameoverback_img, (WIDTH, HEIGHT))
         self.screen.blit(gameoverback_img, (0,0))
-        
+
         background_img=pg.image.load(STATIC_PATH+"image/game_menu.png")
         self.screen.blit(background_img,(WIDTH/3,HEIGHT/4))
-        
+
         menu=[] # save menu image location
         menu.append([WIDTH/2.5, HEIGHT/4 + 100, 300,40, 'resume']) # RESUME
         menu.append([WIDTH/2.5, HEIGHT/4 + 176, 300,40, self.show_single_game_screen]) # RESTART
@@ -413,17 +417,17 @@ class Window:
                                 self.saved=False
                             i[4]()
                             break
-                        
+
     def dual_game_menu_screen(self, player1, player2, apple1, apple2):
         pause_img = pg.image.load(STATIC_PATH+"image/v2_dp_pause_bg.png")
         pause_img = pg.transform.scale(pause_img, (WIDTH, HEIGHT))
         self.screen.blit(pause_img, (0,0))
-        
+
         menu=[] # save menu image location
         menu.append([WIDTH/2.5, HEIGHT/4 + 100, 300,60, 'resume']) # RESUME
         menu.append([WIDTH/2.5, HEIGHT/4 + 200, 300,60, self.show_dual_game_screen]) # RESTART
         menu.append([WIDTH/2.5, HEIGHT/4 +300, 300,60, self.exit]) # EXIT
-        
+
         pg.display.flip()
 
         # wait for user's interaction
@@ -449,7 +453,7 @@ class Window:
             player = Snake() # new player
             apple = Apple()
             self.played=True
-        
+
         # game running
         while self.running:
             # drawing
@@ -457,15 +461,15 @@ class Window:
             background_img = pg.image.load(STATIC_PATH+"image/background.png")
             background_img = pg.transform.scale(background_img, (WIDTH, HEIGHT))
             self.screen.blit(background_img, (0,0))
-            
+
             gameboard_img = pg.image.load(STATIC_PATH+"image/game_board.png")
             gameboard_img = pg.transform.scale(gameboard_img, (800, 800))
             self.screen.blit(gameboard_img, (45,85))
-            
+
             logo_img = pg.image.load(STATIC_PATH+"image/logo.png")
             logo_img = pg.transform.scale(logo_img, (303, 235))
             self.screen.blit(logo_img, (880,200))
-     
+
             # get user's key interaction
             for event in pg.event.get():
                 if event.type == pg.KEYDOWN:
@@ -473,7 +477,7 @@ class Window:
                     #    player.direction = KEY_DIRECTION[event.key]
                     if event.key==pg.K_ESCAPE:
                         self.show_automode_game_menu_screen(player, apple)
-                        
+
             if timedelta(seconds=0.01) <= datetime.now() - last_moved_time:
                 if player.direction!='':
                     self.auto_move(player, apple)
@@ -481,7 +485,7 @@ class Window:
                     player.direction='N'
                     player.move()
                 last_moved_time = datetime.now()
-            
+
             # event) get apple
             if player.positions[0] == apple.position:
                 cnt = 0
@@ -495,17 +499,17 @@ class Window:
                         self.automode_game_over_screen(player, apple)
                         break
                 player.point = player.point + 1 #  a point up when snake ate an apple
-                
+
             # event) collision with wall
             if player.positions[0][0] < 5 or player.positions[0][0] > 42 or player.positions[0][1] < 3 or player.positions[0][1] > 40:
                 self.automode_game_over_screen(player, apple)
                 break
-            
+
             # event) collision with itself
             if player.positions[0] in player.positions[1:]:
                 self.automode_game_over_screen(player, apple)
                 break
-                
+
             player.draw(self.screen)
             apple.draw(self.screen)
             self.draw_text(str(player.point), 200, BLACK, 1050, 500, '../static/font/poxel.ttf')
@@ -527,7 +531,7 @@ class Window:
         global priority
         y = player.positions[0][0]
         x = player.positions[0][1]
-        if x != 40 and y >= 6 and ((5, 40) not in player.positions[1:] or x + 2 < player.positions[len(player.positions) - 1][1]) and (x + 1 < apple.position[1] or x > apple.position[1] or (apple.position[0] == y and apple.position[1] - 1 == x)) : 
+        if x != 40 and y >= 6 and ((5, 40) not in player.positions[1:] or x + 2 < player.positions[len(player.positions) - 1][1]) and (x + 1 < apple.position[1] or x > apple.position[1] or (apple.position[0] == y and apple.position[1] - 1 == x)) :
             next = 'E'
         else:
             if priority[y][x] + 1 == priority[y][x + 1]: next = 'E'
@@ -542,10 +546,10 @@ class Window:
         gameoverback_img = pg.image.load(STATIC_PATH+"image/game_over_back.png")
         gameoverback_img = pg.transform.scale(gameoverback_img, (WIDTH, HEIGHT))
         self.screen.blit(gameoverback_img, (0,0))
-        
+
         background_img=pg.image.load(STATIC_PATH+"image/v2_ap_game_menu.png")
         self.screen.blit(background_img,(WIDTH/3,HEIGHT/4))
-        
+
         menu=[] # save menu image location
         menu.append([WIDTH/2.5, HEIGHT/4+100, 300,60, 'resume']) # RESUME
         menu.append([WIDTH/2.5, HEIGHT/4+200, 300,60, self.show_automode_screen]) # RESTART
@@ -578,7 +582,7 @@ class Window:
             gameover_img = pg.transform.scale(gameover_img, (500, 500))
             self.screen.blit(gameover_img, (390,230))
             self.draw_text(str(player.point), 200, BLACK, 640, 330, '../static/font/poxel.ttf') # display user's points
-            
+
             pg.display.flip()
 
             # wait for user's interaction
